@@ -20,10 +20,10 @@ post:
             minLength: 8
 
   responses:
-    200:
+    201:
       description: 'Success register'
       schema:
-        $ref: './../../../definitions/authentication.yml#/definitions/successRegister'
+        $ref: './../../../definitions/authentication.yml#/definitions/SuccessRegister'
     default:
       schema:
         $ref: './../../../definitions/common.yml#/definitions/Error'

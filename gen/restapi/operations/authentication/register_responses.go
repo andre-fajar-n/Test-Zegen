@@ -13,15 +13,15 @@ import (
 	"zegen/gen/models"
 )
 
-// RegisterOKCode is the HTTP code returned for type RegisterOK
-const RegisterOKCode int = 200
+// RegisterCreatedCode is the HTTP code returned for type RegisterCreated
+const RegisterCreatedCode int = 201
 
 /*
-RegisterOK Success register
+RegisterCreated Success register
 
-swagger:response registerOK
+swagger:response registerCreated
 */
-type RegisterOK struct {
+type RegisterCreated struct {
 
 	/*
 	  In: Body
@@ -29,27 +29,27 @@ type RegisterOK struct {
 	Payload *models.SuccessRegister `json:"body,omitempty"`
 }
 
-// NewRegisterOK creates RegisterOK with default headers values
-func NewRegisterOK() *RegisterOK {
+// NewRegisterCreated creates RegisterCreated with default headers values
+func NewRegisterCreated() *RegisterCreated {
 
-	return &RegisterOK{}
+	return &RegisterCreated{}
 }
 
-// WithPayload adds the payload to the register o k response
-func (o *RegisterOK) WithPayload(payload *models.SuccessRegister) *RegisterOK {
+// WithPayload adds the payload to the register created response
+func (o *RegisterCreated) WithPayload(payload *models.SuccessRegister) *RegisterCreated {
 	o.Payload = payload
 	return o
 }
 
-// SetPayload sets the payload to the register o k response
-func (o *RegisterOK) SetPayload(payload *models.SuccessRegister) {
+// SetPayload sets the payload to the register created response
+func (o *RegisterCreated) SetPayload(payload *models.SuccessRegister) {
 	o.Payload = payload
 }
 
 // WriteResponse to the client
-func (o *RegisterOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+func (o *RegisterCreated) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
-	rw.WriteHeader(200)
+	rw.WriteHeader(201)
 	if o.Payload != nil {
 		payload := o.Payload
 		if err := producer.Produce(rw, payload); err != nil {

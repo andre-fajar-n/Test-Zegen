@@ -1,5 +1,5 @@
 definitions:
-  userData:
+  UserData:
     type: object
     properties: 
       username:
@@ -9,7 +9,7 @@ definitions:
         type: string
         x-omitempty: false
 
-  myUserData:
+  MyUserData:
     type: object
     properties:
       username:

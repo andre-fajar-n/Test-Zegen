@@ -19,10 +19,10 @@ post:
             type: string
 
   responses:
-    201:
+    200:
       description: 'Success login'
       schema:
-        $ref: './../../../definitions/authentication.yml#/definitions/successLogin'
+        $ref: './../../../definitions/authentication.yml#/definitions/SuccessLogin'
       headers:
         token:
           type: string

@@ -13,19 +13,21 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// User user
+// Author author
 //
-// swagger:model User
-type User struct {
+// swagger:model Author
+type Author struct {
 	ModelIdentifier
 
 	ModelTrackTime
 
-	UserData
+	AuthorData
+
+	AuthorForeignKey
 }
 
 // UnmarshalJSON unmarshals this object from a JSON structure
-func (m *User) UnmarshalJSON(raw []byte) error {
+func (m *Author) UnmarshalJSON(raw []byte) error {
 	// AO0
 	var aO0 ModelIdentifier
 	if err := swag.ReadJSON(raw, &aO0); err != nil {
@@ -41,18 +43,25 @@ func (m *User) UnmarshalJSON(raw []byte) error {
 	m.ModelTrackTime = aO1
 
 	// AO2
-	var aO2 UserData
+	var aO2 AuthorData
 	if err := swag.ReadJSON(raw, &aO2); err != nil {
 		return err
 	}
-	m.UserData = aO2
+	m.AuthorData = aO2
+
+	// AO3
+	var aO3 AuthorForeignKey
+	if err := swag.ReadJSON(raw, &aO3); err != nil {
+		return err
+	}
+	m.AuthorForeignKey = aO3
 
 	return nil
 }
 
 // MarshalJSON marshals this object to a JSON structure
-func (m User) MarshalJSON() ([]byte, error) {
-	_parts := make([][]byte, 0, 3)
+func (m Author) MarshalJSON() ([]byte, error) {
+	_parts := make([][]byte, 0, 4)
 
 	aO0, err := swag.WriteJSON(m.ModelIdentifier)
 	if err != nil {
@@ -66,16 +75,22 @@ func (m User) MarshalJSON() ([]byte, error) {
 	}
 	_parts = append(_parts, aO1)
 
-	aO2, err := swag.WriteJSON(m.UserData)
+	aO2, err := swag.WriteJSON(m.AuthorData)
 	if err != nil {
 		return nil, err
 	}
 	_parts = append(_parts, aO2)
+
+	aO3, err := swag.WriteJSON(m.AuthorForeignKey)
+	if err != nil {
+		return nil, err
+	}
+	_parts = append(_parts, aO3)
 	return swag.ConcatJSON(_parts...), nil
 }
 
-// Validate validates this user
-func (m *User) Validate(formats strfmt.Registry) error {
+// Validate validates this author
+func (m *Author) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	// validation for a type composition with ModelIdentifier
@@ -86,8 +101,12 @@ func (m *User) Validate(formats strfmt.Registry) error {
 	if err := m.ModelTrackTime.Validate(formats); err != nil {
 		res = append(res, err)
 	}
-	// validation for a type composition with UserData
-	if err := m.UserData.Validate(formats); err != nil {
+	// validation for a type composition with AuthorData
+	if err := m.AuthorData.Validate(formats); err != nil {
+		res = append(res, err)
+	}
+	// validation for a type composition with AuthorForeignKey
+	if err := m.AuthorForeignKey.Validate(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -97,8 +116,8 @@ func (m *User) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validate this user based on the context it is used
-func (m *User) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this author based on the context it is used
+func (m *Author) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	// validation for a type composition with ModelIdentifier
@@ -109,8 +128,12 @@ func (m *User) ContextValidate(ctx context.Context, formats strfmt.Registry) err
 	if err := m.ModelTrackTime.ContextValidate(ctx, formats); err != nil {
 		res = append(res, err)
 	}
-	// validation for a type composition with UserData
-	if err := m.UserData.ContextValidate(ctx, formats); err != nil {
+	// validation for a type composition with AuthorData
+	if err := m.AuthorData.ContextValidate(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+	// validation for a type composition with AuthorForeignKey
+	if err := m.AuthorForeignKey.ContextValidate(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -121,7 +144,7 @@ func (m *User) ContextValidate(ctx context.Context, formats strfmt.Registry) err
 }
 
 // MarshalBinary interface implementation
-func (m *User) MarshalBinary() ([]byte, error) {
+func (m *Author) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -129,8 +152,8 @@ func (m *User) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *User) UnmarshalBinary(b []byte) error {
-	var res User
+func (m *Author) UnmarshalBinary(b []byte) error {
+	var res Author
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

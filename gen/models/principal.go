@@ -16,7 +16,7 @@ import (
 
 // Principal principal
 //
-// swagger:model principal
+// swagger:model Principal
 type Principal struct {
 
 	// expired at

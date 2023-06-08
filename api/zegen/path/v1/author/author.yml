@@ -1,0 +1,33 @@
+post:
+  tags: [author]
+  summary: 'Create'
+  description: 'Create author'
+  operationId: createAuthor
+  security:
+    - authorization: []
+  parameters:
+    - name: data
+      in: body
+      required: true
+      schema:
+        type: object
+        required:
+          - "name"
+          - "country"
+        properties: 
+          name:
+            type: string
+            minLength: 1
+          country:
+            type: string
+            minLength: 1
+
+  responses:
+    201:
+      description: 'Success create'
+      schema:
+        $ref: './../../../definitions/author.yml#/definitions/SuccessCreateAuthor'
+    default:
+      schema:
+        $ref: './../../../definitions/common.yml#/definitions/Error'
+      description: Server Error

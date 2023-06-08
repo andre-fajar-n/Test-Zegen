@@ -9,7 +9,7 @@ get:
     200:
       description: "Success fetch data"
       schema:
-        $ref: "./../../../definitions/user.yml#/definitions/myUserData"
+        $ref: "./../../../definitions/user.yml#/definitions/MyUserData"
     default:
       schema:
         $ref: "./../../../definitions/common.yml#/definitions/Error"

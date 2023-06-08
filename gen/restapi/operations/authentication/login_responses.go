@@ -13,15 +13,15 @@ import (
 	"zegen/gen/models"
 )
 
-// LoginCreatedCode is the HTTP code returned for type LoginCreated
-const LoginCreatedCode int = 201
+// LoginOKCode is the HTTP code returned for type LoginOK
+const LoginOKCode int = 200
 
 /*
-LoginCreated Success login
+LoginOK Success login
 
-swagger:response loginCreated
+swagger:response loginOK
 */
-type LoginCreated struct {
+type LoginOK struct {
 	/*
 
 	 */
@@ -33,36 +33,36 @@ type LoginCreated struct {
 	Payload *models.SuccessLogin `json:"body,omitempty"`
 }
 
-// NewLoginCreated creates LoginCreated with default headers values
-func NewLoginCreated() *LoginCreated {
+// NewLoginOK creates LoginOK with default headers values
+func NewLoginOK() *LoginOK {
 
-	return &LoginCreated{}
+	return &LoginOK{}
 }
 
-// WithToken adds the token to the login created response
-func (o *LoginCreated) WithToken(token string) *LoginCreated {
+// WithToken adds the token to the login o k response
+func (o *LoginOK) WithToken(token string) *LoginOK {
 	o.Token = token
 	return o
 }
 
-// SetToken sets the token to the login created response
-func (o *LoginCreated) SetToken(token string) {
+// SetToken sets the token to the login o k response
+func (o *LoginOK) SetToken(token string) {
 	o.Token = token
 }
 
-// WithPayload adds the payload to the login created response
-func (o *LoginCreated) WithPayload(payload *models.SuccessLogin) *LoginCreated {
+// WithPayload adds the payload to the login o k response
+func (o *LoginOK) WithPayload(payload *models.SuccessLogin) *LoginOK {
 	o.Payload = payload
 	return o
 }
 
-// SetPayload sets the payload to the login created response
-func (o *LoginCreated) SetPayload(payload *models.SuccessLogin) {
+// SetPayload sets the payload to the login o k response
+func (o *LoginOK) SetPayload(payload *models.SuccessLogin) {
 	o.Payload = payload
 }
 
 // WriteResponse to the client
-func (o *LoginCreated) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+func (o *LoginOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	// response header token
 
@@ -71,7 +71,7 @@ func (o *LoginCreated) WriteResponse(rw http.ResponseWriter, producer runtime.Pr
 		rw.Header().Set("token", token)
 	}
 
-	rw.WriteHeader(201)
+	rw.WriteHeader(200)
 	if o.Payload != nil {
 		payload := o.Payload
 		if err := producer.Produce(rw, payload); err != nil {

@@ -27,8 +27,12 @@ paths:
   /v1/profile:
     $ref: ./path/v1/user/profile.yml
 
+  # user
+  /v1/author:
+    $ref: ./path/v1/author/author.yml
+
 definitions:
-  principal:
+  Principal:
     type: object
     properties:
       username:
@@ -40,8 +44,22 @@ definitions:
         type: string
         format: date-time
 
-  user:
+  User:
     allOf:
       - $ref: "./definitions/common.yml#/definitions/ModelIdentifier"
       - $ref: "./definitions/common.yml#/definitions/ModelTrackTime"
-      - $ref: "./definitions/user.yml#/definitions/userData"
+      - $ref: "./definitions/user.yml#/definitions/UserData"
+
+  Author:
+    allOf:
+    - $ref: "./definitions/common.yml#/definitions/ModelIdentifier"
+    - $ref: "./definitions/common.yml#/definitions/ModelTrackTime"
+    - $ref: ./definitions/author.yml#/definitions/AuthorData
+    - $ref: ./definitions/author.yml#/definitions/AuthorForeignKey
+
+  Book:
+    allOf:
+    - $ref: "./definitions/common.yml#/definitions/ModelIdentifier"
+    - $ref: "./definitions/common.yml#/definitions/ModelTrackTime"
+    - $ref: ./definitions/book.yml#/definitions/BookData
+    - $ref: ./definitions/book.yml#/definitions/BookForeignKey

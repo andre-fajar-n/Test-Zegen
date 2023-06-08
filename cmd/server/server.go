@@ -65,9 +65,9 @@ func Main() {
 
 	rt := runtime.NewRuntime()
 
-	userRepo := repositories.Newuser(*rt)
+	repo := repositories.New(*rt)
 
-	h := handlers.NewHandler(*rt, userRepo)
+	h := handlers.NewHandler(*rt, repo)
 
 	rest.Authorization(rt, api)
 	rest.Route(rt, api, h)

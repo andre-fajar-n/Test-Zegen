@@ -1,0 +1,19 @@
+definitions:
+  BookData:
+    type: object
+    properties:
+      title:
+        type: string
+      publishedYear:
+        type: number
+        format: int64
+      isbn:
+        type: string
+
+  BookForeignKey:
+    type: object
+    properties:
+      authors:
+        type: array
+        items:
+          $ref: ./book_author.yml#/definitions/BookAuthor

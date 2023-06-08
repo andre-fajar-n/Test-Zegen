@@ -13,22 +13,22 @@ import (
 )
 
 func (h *handler) Register(ctx context.Context, req authentication.RegisterParams) (*uint64, error) {
-	logger := h.runtime.Logger.With().
+	logger := h.rt.Logger.With().
 		Interface("req", req.Data).
 		Logger()
 
-	existUsername, err := h.userRepo.UsernameExist(ctx, *req.Data.Username)
+	existUsername, err := h.repo.UsernameExist(ctx, *req.Data.Username)
 	if err != nil {
-		logger.Error().Err(err).Msg("error userRepo.UsernameExist")
+		logger.Error().Err(err).Msg("error repo.UsernameExist")
 		return nil, err
 	}
 	if existUsername {
-		return nil, h.runtime.SetError(http.StatusBadRequest, "username already exist")
+		return nil, h.rt.SetError(http.StatusBadRequest, "username already exist")
 	}
 
 	now := time.Now().UTC()
 	nowStrfmt := strfmt.DateTime(now)
-	user, err := h.userRepo.Create(ctx, nil, &models.User{
+	user, err := h.repo.CreateUser(ctx, nil, &models.User{
 		ModelTrackTime: models.ModelTrackTime{
 			CreatedAt: &nowStrfmt,
 		},
@@ -38,7 +38,7 @@ func (h *handler) Register(ctx context.Context, req authentication.RegisterParam
 		},
 	})
 	if err != nil {
-		logger.Error().Err(err).Msg("error userRepo.Create")
+		logger.Error().Err(err).Msg("error repo.Create")
 		return nil, err
 	}
 
@@ -46,28 +46,28 @@ func (h *handler) Register(ctx context.Context, req authentication.RegisterParam
 }
 
 func (h *handler) Login(ctx context.Context, req *authentication.LoginParams) (token, expiredAt *string, err error) {
-	logger := h.runtime.Logger.With().
+	logger := h.rt.Logger.With().
 		Interface("req", req.Data).
 		Logger()
 
-	user, err := h.userRepo.FindBySingleColumn(ctx, "username", req.Data.Username, false)
+	user, err := h.repo.FindUserBySingleColumn(ctx, "username", req.Data.Username, false)
 	if err != nil {
-		logger.Error().Err(err).Msg("error userRepo.FindBySingleColumn")
+		logger.Error().Err(err).Msg("error repo.FindUserBySingleColumn")
 		return
 	}
 
 	if user.Password != utilsHash.HashSha256(*req.Data.Password) {
-		return nil, nil, h.runtime.SetError(http.StatusForbidden, "wrong password")
+		return nil, nil, h.rt.SetError(http.StatusForbidden, "wrong password")
 	}
 
-	secret := h.runtime.Cfg.JwtSecret
+	secret := h.rt.Cfg.JwtSecret
 	maker, err := utilsJwt.NewJWTMaker(secret)
 	if err != nil {
 		logger.Error().Err(err).Msg("error NewJWTMaker")
 		return
 	}
 
-	tempToken, payload, err := maker.CreateToken(*user.ID, user.Username, time.Duration(h.runtime.Cfg.JwtExp)*time.Second)
+	tempToken, payload, err := maker.CreateToken(*user.ID, user.Username, time.Duration(h.rt.Cfg.JwtExp)*time.Second)
 	if err != nil {
 		logger.Error().Err(err).Msg("error CreateToken")
 		return

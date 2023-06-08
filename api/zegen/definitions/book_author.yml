@@ -1,0 +1,14 @@
+definitions:
+  BookAuthor:
+    allOf:
+    - $ref: "./common.yml#/definitions/ModelIdentifier"
+    - $ref: "./common.yml#/definitions/ModelTrackTime"
+    - $ref: '#/definitions/BookAuthorData'
+
+  BookAuthorData:
+    type: object
+    properties:
+      book_id:
+        type: string
+      author_id:
+        type: string

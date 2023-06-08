@@ -59,6 +59,45 @@ func init() {
         }
       }
     },
+    "/v1/author": {
+      "post": {
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "description": "Create author",
+        "tags": [
+          "author"
+        ],
+        "summary": "Create",
+        "operationId": "createAuthor",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/createAuthorParamsBody"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success create",
+            "schema": {
+              "$ref": "#/definitions/successCreateAuthor"
+            }
+          },
+          "default": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
     "/v1/login": {
       "post": {
         "security": [],
@@ -78,7 +117,7 @@ func init() {
           }
         ],
         "responses": {
-          "201": {
+          "200": {
             "description": "Success login",
             "schema": {
               "$ref": "#/definitions/successLogin"
@@ -146,7 +185,7 @@ func init() {
           }
         ],
         "responses": {
-          "200": {
+          "201": {
             "description": "Success register",
             "schema": {
               "$ref": "#/definitions/successRegister"
@@ -163,6 +202,157 @@ func init() {
     }
   },
   "definitions": {
+    "Author": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/modelIdentifier"
+        },
+        {
+          "$ref": "#/definitions/modelTrackTime"
+        },
+        {
+          "$ref": "#/definitions/authorData"
+        },
+        {
+          "$ref": "#/definitions/authorForeignKey"
+        }
+      ]
+    },
+    "Book": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/modelIdentifier"
+        },
+        {
+          "$ref": "#/definitions/modelTrackTime"
+        },
+        {
+          "$ref": "#/definitions/bookData"
+        },
+        {
+          "$ref": "#/definitions/bookForeignKey"
+        }
+      ]
+    },
+    "Principal": {
+      "type": "object",
+      "properties": {
+        "expired_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "user_id": {
+          "type": "number",
+          "format": "uint64"
+        },
+        "username": {
+          "type": "string"
+        }
+      }
+    },
+    "User": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/modelIdentifier"
+        },
+        {
+          "$ref": "#/definitions/modelTrackTime"
+        },
+        {
+          "$ref": "#/definitions/userData"
+        }
+      ]
+    },
+    "authorData": {
+      "type": "object",
+      "properties": {
+        "country": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "authorForeignKey": {
+      "type": "object",
+      "properties": {
+        "books": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/bookAuthor"
+          }
+        }
+      }
+    },
+    "bookAuthor": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/modelIdentifier"
+        },
+        {
+          "$ref": "#/definitions/modelTrackTime"
+        },
+        {
+          "$ref": "#/definitions/bookAuthorData"
+        }
+      ]
+    },
+    "bookAuthorData": {
+      "type": "object",
+      "properties": {
+        "author_id": {
+          "type": "string"
+        },
+        "book_id": {
+          "type": "string"
+        }
+      }
+    },
+    "bookData": {
+      "type": "object",
+      "properties": {
+        "isbn": {
+          "type": "string"
+        },
+        "publishedYear": {
+          "type": "number",
+          "format": "int64"
+        },
+        "title": {
+          "type": "string"
+        }
+      }
+    },
+    "bookForeignKey": {
+      "type": "object",
+      "properties": {
+        "authors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/bookAuthor"
+          }
+        }
+      }
+    },
+    "createAuthorParamsBody": {
+      "type": "object",
+      "required": [
+        "name",
+        "country"
+      ],
+      "properties": {
+        "country": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "x-go-gen-location": "operations"
+    },
     "error": {
       "type": "object",
       "properties": {
@@ -238,22 +428,6 @@ func init() {
         }
       }
     },
-    "principal": {
-      "type": "object",
-      "properties": {
-        "expired_at": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "user_id": {
-          "type": "number",
-          "format": "uint64"
-        },
-        "username": {
-          "type": "string"
-        }
-      }
-    },
     "registerParamsBody": {
       "type": "object",
       "required": [
@@ -278,6 +452,26 @@ func init() {
           "type": "string"
         }
       }
+    },
+    "successCreateAuthor": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/success"
+        },
+        {
+          "$ref": "#/definitions/successCreateAuthorAllOf1"
+        }
+      ]
+    },
+    "successCreateAuthorAllOf1": {
+      "type": "object",
+      "properties": {
+        "author_id": {
+          "type": "number",
+          "format": "uint64"
+        }
+      },
+      "x-go-gen-location": "models"
     },
     "successLogin": {
       "allOf": [
@@ -317,19 +511,6 @@ func init() {
         }
       },
       "x-go-gen-location": "models"
-    },
-    "user": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/modelIdentifier"
-        },
-        {
-          "$ref": "#/definitions/modelTrackTime"
-        },
-        {
-          "$ref": "#/definitions/userData"
-        }
-      ]
     },
     "userData": {
       "type": "object",
@@ -395,6 +576,45 @@ func init() {
         }
       }
     },
+    "/v1/author": {
+      "post": {
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "description": "Create author",
+        "tags": [
+          "author"
+        ],
+        "summary": "Create",
+        "operationId": "createAuthor",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/createAuthorParamsBody"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success create",
+            "schema": {
+              "$ref": "#/definitions/successCreateAuthor"
+            }
+          },
+          "default": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
     "/v1/login": {
       "post": {
         "security": [],
@@ -414,7 +634,7 @@ func init() {
           }
         ],
         "responses": {
-          "201": {
+          "200": {
             "description": "Success login",
             "schema": {
               "$ref": "#/definitions/successLogin"
@@ -482,7 +702,7 @@ func init() {
           }
         ],
         "responses": {
-          "200": {
+          "201": {
             "description": "Success register",
             "schema": {
               "$ref": "#/definitions/successRegister"
@@ -499,6 +719,157 @@ func init() {
     }
   },
   "definitions": {
+    "Author": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/modelIdentifier"
+        },
+        {
+          "$ref": "#/definitions/modelTrackTime"
+        },
+        {
+          "$ref": "#/definitions/authorData"
+        },
+        {
+          "$ref": "#/definitions/authorForeignKey"
+        }
+      ]
+    },
+    "Book": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/modelIdentifier"
+        },
+        {
+          "$ref": "#/definitions/modelTrackTime"
+        },
+        {
+          "$ref": "#/definitions/bookData"
+        },
+        {
+          "$ref": "#/definitions/bookForeignKey"
+        }
+      ]
+    },
+    "Principal": {
+      "type": "object",
+      "properties": {
+        "expired_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "user_id": {
+          "type": "number",
+          "format": "uint64"
+        },
+        "username": {
+          "type": "string"
+        }
+      }
+    },
+    "User": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/modelIdentifier"
+        },
+        {
+          "$ref": "#/definitions/modelTrackTime"
+        },
+        {
+          "$ref": "#/definitions/userData"
+        }
+      ]
+    },
+    "authorData": {
+      "type": "object",
+      "properties": {
+        "country": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "authorForeignKey": {
+      "type": "object",
+      "properties": {
+        "books": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/bookAuthor"
+          }
+        }
+      }
+    },
+    "bookAuthor": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/modelIdentifier"
+        },
+        {
+          "$ref": "#/definitions/modelTrackTime"
+        },
+        {
+          "$ref": "#/definitions/bookAuthorData"
+        }
+      ]
+    },
+    "bookAuthorData": {
+      "type": "object",
+      "properties": {
+        "author_id": {
+          "type": "string"
+        },
+        "book_id": {
+          "type": "string"
+        }
+      }
+    },
+    "bookData": {
+      "type": "object",
+      "properties": {
+        "isbn": {
+          "type": "string"
+        },
+        "publishedYear": {
+          "type": "number",
+          "format": "int64"
+        },
+        "title": {
+          "type": "string"
+        }
+      }
+    },
+    "bookForeignKey": {
+      "type": "object",
+      "properties": {
+        "authors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/bookAuthor"
+          }
+        }
+      }
+    },
+    "createAuthorParamsBody": {
+      "type": "object",
+      "required": [
+        "name",
+        "country"
+      ],
+      "properties": {
+        "country": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "x-go-gen-location": "operations"
+    },
     "error": {
       "type": "object",
       "properties": {
@@ -574,22 +945,6 @@ func init() {
         }
       }
     },
-    "principal": {
-      "type": "object",
-      "properties": {
-        "expired_at": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "user_id": {
-          "type": "number",
-          "format": "uint64"
-        },
-        "username": {
-          "type": "string"
-        }
-      }
-    },
     "registerParamsBody": {
       "type": "object",
       "required": [
@@ -614,6 +969,26 @@ func init() {
           "type": "string"
         }
       }
+    },
+    "successCreateAuthor": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/success"
+        },
+        {
+          "$ref": "#/definitions/successCreateAuthorAllOf1"
+        }
+      ]
+    },
+    "successCreateAuthorAllOf1": {
+      "type": "object",
+      "properties": {
+        "author_id": {
+          "type": "number",
+          "format": "uint64"
+        }
+      },
+      "x-go-gen-location": "models"
     },
     "successLogin": {
       "allOf": [
@@ -653,19 +1028,6 @@ func init() {
         }
       },
       "x-go-gen-location": "models"
-    },
-    "user": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/modelIdentifier"
-        },
-        {
-          "$ref": "#/definitions/modelTrackTime"
-        },
-        {
-          "$ref": "#/definitions/userData"
-        }
-      ]
     },
     "userData": {
       "type": "object",

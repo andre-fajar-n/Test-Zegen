@@ -1,5 +1,5 @@
 definitions:
-  successLogin:
+  SuccessLogin:
     allOf:
       - $ref: './common.yml#/definitions/Success'
       - type: object
@@ -7,7 +7,7 @@ definitions:
           expired_at:
             type: string
 
-  successRegister:
+  SuccessRegister:
     allOf:
       - $ref: './common.yml#/definitions/Success'
       - type: object

@@ -1,0 +1,25 @@
+definitions:
+  AuthorData:
+    type: object
+    properties:
+      name:
+        type: string
+      country:
+        type: string
+
+  AuthorForeignKey:
+    type: object
+    properties:
+      books:
+        type: array
+        items:
+          $ref: ./book_author.yml#/definitions/BookAuthor
+
+  SuccessCreateAuthor:
+    allOf:
+      - $ref: './common.yml#/definitions/Success'
+      - type: object
+        properties:
+          author_id:
+            type: number
+            format: uint64

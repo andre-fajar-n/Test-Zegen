@@ -69,9 +69,3 @@ definitions:
         type: integer
       total_page:
         type: integer
-
-  customFields:
-    type: object
-    additionalProperties:
-      type: object
-    x-go-package: "time"

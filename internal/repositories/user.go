@@ -5,36 +5,17 @@ import (
 	"fmt"
 	"net/http"
 	"zegen/gen/models"
-	"zegen/runtime"
 
 	"gorm.io/gorm"
 )
 
-type (
-	user struct {
-		runtime runtime.Runtime
-	}
-
-	User interface {
-		Create(ctx context.Context, tx *gorm.DB, data *models.User) (*models.User, error)
-		FindBySingleColumn(ctx context.Context, column string, value interface{}, isDeleted bool) (*models.User, error)
-		UsernameExist(ctx context.Context, username string) (bool, error)
-	}
-)
-
-func Newuser(rt runtime.Runtime) User {
-	return &user{
-		rt,
-	}
-}
-
-func (r *user) Create(ctx context.Context, tx *gorm.DB, data *models.User) (*models.User, error) {
-	logger := r.runtime.Logger.With().
+func (r *repository) CreateUser(ctx context.Context, tx *gorm.DB, data *models.User) (*models.User, error) {
+	logger := r.rt.Logger.With().
 		Interface("data", data).
 		Logger()
 
 	if tx == nil {
-		tx = r.runtime.Db
+		tx = r.rt.Db
 	}
 
 	err := tx.Model(&data).Select("*").Create(&data).Error
@@ -46,14 +27,14 @@ func (r *user) Create(ctx context.Context, tx *gorm.DB, data *models.User) (*mod
 	return data, nil
 }
 
-func (r *user) FindBySingleColumn(ctx context.Context, column string, value interface{}, isDeleted bool) (*models.User, error) {
-	logger := r.runtime.Logger.With().
+func (r *repository) FindUserBySingleColumn(ctx context.Context, column string, value interface{}, isDeleted bool) (*models.User, error) {
+	logger := r.rt.Logger.With().
 		Str("column", column).
 		Interface("value", value).
 		Logger()
 
 	userModel := models.User{}
-	db := r.runtime.Db.Model(&userModel).Where(fmt.Sprintf("%s = ?", column), value)
+	db := r.rt.Db.Model(&userModel).Where(fmt.Sprintf("%s = ?", column), value)
 
 	if isDeleted {
 		db = db.Where("deleted_at IS NOT NULL")
@@ -63,7 +44,7 @@ func (r *user) FindBySingleColumn(ctx context.Context, column string, value inte
 
 	err := db.First(&userModel).Error
 	if err == gorm.ErrRecordNotFound {
-		return nil, r.runtime.SetError(http.StatusNotFound, "user not found")
+		return nil, r.rt.SetError(http.StatusNotFound, "user not found")
 	}
 	if err != nil {
 		logger.Error().Err(err).Msg("error query")
@@ -73,14 +54,14 @@ func (r *user) FindBySingleColumn(ctx context.Context, column string, value inte
 	return &userModel, nil
 }
 
-func (r *user) UsernameExist(ctx context.Context, username string) (bool, error) {
-	logger := r.runtime.Logger.With().
+func (r *repository) UsernameExist(ctx context.Context, username string) (bool, error) {
+	logger := r.rt.Logger.With().
 		Str("username", username).
 		Logger()
 
 	userModel := models.User{}
 
-	db := r.runtime.Db.Model(&userModel).Where("username", username)
+	db := r.rt.Db.Model(&userModel).Where("username", username)
 
 	err := db.First(&userModel).Error
 	if err == gorm.ErrRecordNotFound {

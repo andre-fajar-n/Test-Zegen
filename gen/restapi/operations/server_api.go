@@ -21,6 +21,7 @@ import (
 
 	"zegen/gen/models"
 	"zegen/gen/restapi/operations/authentication"
+	"zegen/gen/restapi/operations/author"
 	"zegen/gen/restapi/operations/health"
 	"zegen/gen/restapi/operations/user"
 )
@@ -48,6 +49,9 @@ func NewServerAPI(spec *loads.Document) *ServerAPI {
 
 		JSONProducer: runtime.JSONProducer(),
 
+		AuthorCreateAuthorHandler: author.CreateAuthorHandlerFunc(func(params author.CreateAuthorParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation author.CreateAuthor has not yet been implemented")
+		}),
 		UserFindMyUserDataHandler: user.FindMyUserDataHandlerFunc(func(params user.FindMyUserDataParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation user.FindMyUserData has not yet been implemented")
 		}),
@@ -113,6 +117,8 @@ type ServerAPI struct {
 	// APIAuthorizer provides access control (ACL/RBAC/ABAC) by providing access to the request and authenticated principal
 	APIAuthorizer runtime.Authorizer
 
+	// AuthorCreateAuthorHandler sets the operation handler for the create author operation
+	AuthorCreateAuthorHandler author.CreateAuthorHandler
 	// UserFindMyUserDataHandler sets the operation handler for the find my user data operation
 	UserFindMyUserDataHandler user.FindMyUserDataHandler
 	// HealthHealthHandler sets the operation handler for the health operation
@@ -205,6 +211,9 @@ func (o *ServerAPI) Validate() error {
 		unregistered = append(unregistered, "AuthorizationAuth")
 	}
 
+	if o.AuthorCreateAuthorHandler == nil {
+		unregistered = append(unregistered, "author.CreateAuthorHandler")
+	}
 	if o.UserFindMyUserDataHandler == nil {
 		unregistered = append(unregistered, "user.FindMyUserDataHandler")
 	}
@@ -318,6 +327,10 @@ func (o *ServerAPI) initHandlerCache() {
 		o.handlers = make(map[string]map[string]http.Handler)
 	}
 
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/v1/author"] = author.NewCreateAuthor(o.context, o.AuthorCreateAuthorHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}

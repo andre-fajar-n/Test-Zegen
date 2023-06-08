@@ -1,0 +1,65 @@
+put:
+  tags: [book]
+  summary: 'Update'
+  description: 'Update book'
+  operationId: updateBook
+  security:
+    - authorization: []
+  parameters:
+    - $ref: ./../../../parameters/book.yml#/parameters/PathBookID
+    - name: data
+      in: body
+      required: true
+      schema:
+        type: object
+        required:
+          - "title"
+          - "isbn"
+          - "published_year"
+          - "author_ids"
+        properties: 
+          title:
+            type: string
+            minLength: 1
+          isbn:
+            type: string
+            minLength: 1
+          published_year:
+            type: number
+            format: int64
+          author_ids:
+            type: array
+            items:
+              type: number
+              minItems: 1
+              uniqueItems: true
+
+  responses:
+    200:
+      description: 'Success update'
+      schema:
+        $ref: './../../../definitions/common.yml#/definitions/Success'
+    default:
+      description: Server Error
+      schema:
+        $ref: './../../../definitions/common.yml#/definitions/Error'
+
+delete:
+  tags: [book]
+  summary: 'Soft Delete'
+  description: 'Soft delete book'
+  operationId: softDeleteBook
+  security:
+    - authorization: []
+  parameters:
+    - $ref: ./../../../parameters/book.yml#/parameters/PathBookID
+
+  responses:
+    200:
+      description: 'Success delete'
+      schema:
+        $ref: './../../../definitions/common.yml#/definitions/Success'
+    default:
+      description: Server Error
+      schema:
+        $ref: './../../../definitions/common.yml#/definitions/Error'

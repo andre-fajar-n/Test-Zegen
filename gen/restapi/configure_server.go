@@ -14,6 +14,7 @@ import (
 	"zegen/gen/restapi/operations"
 	"zegen/gen/restapi/operations/authentication"
 	"zegen/gen/restapi/operations/author"
+	"zegen/gen/restapi/operations/book"
 	"zegen/gen/restapi/operations/health"
 )
 
@@ -60,6 +61,11 @@ func configureAPI(api *operations.ServerAPI) http.Handler {
 			return middleware.NotImplemented("operation author.CreateAuthor has not yet been implemented")
 		})
 	}
+	if api.BookCreateBookHandler == nil {
+		api.BookCreateBookHandler = book.CreateBookHandlerFunc(func(params book.CreateBookParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation book.CreateBook has not yet been implemented")
+		})
+	}
 	if api.HealthHealthHandler == nil {
 		api.HealthHealthHandler = health.HealthHandlerFunc(func(params health.HealthParams) middleware.Responder {
 			return middleware.NotImplemented("operation health.Health has not yet been implemented")
@@ -80,9 +86,19 @@ func configureAPI(api *operations.ServerAPI) http.Handler {
 			return middleware.NotImplemented("operation author.SoftDeleteAuthor has not yet been implemented")
 		})
 	}
+	if api.BookSoftDeleteBookHandler == nil {
+		api.BookSoftDeleteBookHandler = book.SoftDeleteBookHandlerFunc(func(params book.SoftDeleteBookParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation book.SoftDeleteBook has not yet been implemented")
+		})
+	}
 	if api.AuthorUpdateAuthorHandler == nil {
 		api.AuthorUpdateAuthorHandler = author.UpdateAuthorHandlerFunc(func(params author.UpdateAuthorParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation author.UpdateAuthor has not yet been implemented")
+		})
+	}
+	if api.BookUpdateBookHandler == nil {
+		api.BookUpdateBookHandler = book.UpdateBookHandlerFunc(func(params book.UpdateBookParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation book.UpdateBook has not yet been implemented")
 		})
 	}
 

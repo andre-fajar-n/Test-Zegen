@@ -22,6 +22,7 @@ import (
 	"zegen/gen/models"
 	"zegen/gen/restapi/operations/authentication"
 	"zegen/gen/restapi/operations/author"
+	"zegen/gen/restapi/operations/book"
 	"zegen/gen/restapi/operations/health"
 )
 
@@ -51,6 +52,9 @@ func NewServerAPI(spec *loads.Document) *ServerAPI {
 		AuthorCreateAuthorHandler: author.CreateAuthorHandlerFunc(func(params author.CreateAuthorParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation author.CreateAuthor has not yet been implemented")
 		}),
+		BookCreateBookHandler: book.CreateBookHandlerFunc(func(params book.CreateBookParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation book.CreateBook has not yet been implemented")
+		}),
 		HealthHealthHandler: health.HealthHandlerFunc(func(params health.HealthParams) middleware.Responder {
 			return middleware.NotImplemented("operation health.Health has not yet been implemented")
 		}),
@@ -63,8 +67,14 @@ func NewServerAPI(spec *loads.Document) *ServerAPI {
 		AuthorSoftDeleteAuthorHandler: author.SoftDeleteAuthorHandlerFunc(func(params author.SoftDeleteAuthorParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation author.SoftDeleteAuthor has not yet been implemented")
 		}),
+		BookSoftDeleteBookHandler: book.SoftDeleteBookHandlerFunc(func(params book.SoftDeleteBookParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation book.SoftDeleteBook has not yet been implemented")
+		}),
 		AuthorUpdateAuthorHandler: author.UpdateAuthorHandlerFunc(func(params author.UpdateAuthorParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation author.UpdateAuthor has not yet been implemented")
+		}),
+		BookUpdateBookHandler: book.UpdateBookHandlerFunc(func(params book.UpdateBookParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation book.UpdateBook has not yet been implemented")
 		}),
 
 		// Applies when the "Authorization" header is set
@@ -121,6 +131,8 @@ type ServerAPI struct {
 
 	// AuthorCreateAuthorHandler sets the operation handler for the create author operation
 	AuthorCreateAuthorHandler author.CreateAuthorHandler
+	// BookCreateBookHandler sets the operation handler for the create book operation
+	BookCreateBookHandler book.CreateBookHandler
 	// HealthHealthHandler sets the operation handler for the health operation
 	HealthHealthHandler health.HealthHandler
 	// AuthenticationLoginHandler sets the operation handler for the login operation
@@ -129,8 +141,12 @@ type ServerAPI struct {
 	AuthenticationRegisterHandler authentication.RegisterHandler
 	// AuthorSoftDeleteAuthorHandler sets the operation handler for the soft delete author operation
 	AuthorSoftDeleteAuthorHandler author.SoftDeleteAuthorHandler
+	// BookSoftDeleteBookHandler sets the operation handler for the soft delete book operation
+	BookSoftDeleteBookHandler book.SoftDeleteBookHandler
 	// AuthorUpdateAuthorHandler sets the operation handler for the update author operation
 	AuthorUpdateAuthorHandler author.UpdateAuthorHandler
+	// BookUpdateBookHandler sets the operation handler for the update book operation
+	BookUpdateBookHandler book.UpdateBookHandler
 
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
@@ -218,6 +234,9 @@ func (o *ServerAPI) Validate() error {
 	if o.AuthorCreateAuthorHandler == nil {
 		unregistered = append(unregistered, "author.CreateAuthorHandler")
 	}
+	if o.BookCreateBookHandler == nil {
+		unregistered = append(unregistered, "book.CreateBookHandler")
+	}
 	if o.HealthHealthHandler == nil {
 		unregistered = append(unregistered, "health.HealthHandler")
 	}
@@ -230,8 +249,14 @@ func (o *ServerAPI) Validate() error {
 	if o.AuthorSoftDeleteAuthorHandler == nil {
 		unregistered = append(unregistered, "author.SoftDeleteAuthorHandler")
 	}
+	if o.BookSoftDeleteBookHandler == nil {
+		unregistered = append(unregistered, "book.SoftDeleteBookHandler")
+	}
 	if o.AuthorUpdateAuthorHandler == nil {
 		unregistered = append(unregistered, "author.UpdateAuthorHandler")
+	}
+	if o.BookUpdateBookHandler == nil {
+		unregistered = append(unregistered, "book.UpdateBookHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -338,6 +363,10 @@ func (o *ServerAPI) initHandlerCache() {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/v1/author"] = author.NewCreateAuthor(o.context, o.AuthorCreateAuthorHandler)
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/v1/book"] = book.NewCreateBook(o.context, o.BookCreateBookHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
@@ -354,10 +383,18 @@ func (o *ServerAPI) initHandlerCache() {
 		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
 	o.handlers["DELETE"]["/v1/author/{author_id}"] = author.NewSoftDeleteAuthor(o.context, o.AuthorSoftDeleteAuthorHandler)
+	if o.handlers["DELETE"] == nil {
+		o.handlers["DELETE"] = make(map[string]http.Handler)
+	}
+	o.handlers["DELETE"]["/v1/book/{book_id}"] = book.NewSoftDeleteBook(o.context, o.BookSoftDeleteBookHandler)
 	if o.handlers["PUT"] == nil {
 		o.handlers["PUT"] = make(map[string]http.Handler)
 	}
 	o.handlers["PUT"]["/v1/author/{author_id}"] = author.NewUpdateAuthor(o.context, o.AuthorUpdateAuthorHandler)
+	if o.handlers["PUT"] == nil {
+		o.handlers["PUT"] = make(map[string]http.Handler)
+	}
+	o.handlers["PUT"]["/v1/book/{book_id}"] = book.NewUpdateBook(o.context, o.BookUpdateBookHandler)
 }
 
 // Serve creates a http handler to serve the API over HTTP

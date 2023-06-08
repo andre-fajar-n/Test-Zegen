@@ -34,6 +34,13 @@ paths:
   /v1/author/{author_id}:
     $ref: ./path/v1/author/author.id.yml
 
+  # author
+  /v1/book:
+    $ref: ./path/v1/book/book.yml
+
+  /v1/book/{book_id}:
+    $ref: ./path/v1/book/book.id.yml
+
 definitions:
   Principal:
     type: object

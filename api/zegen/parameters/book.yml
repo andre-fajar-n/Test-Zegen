@@ -1,0 +1,7 @@
+parameters:
+  PathBookID:
+    name: book_id
+    required: true
+    in: path
+    type: integer
+    format: uint64

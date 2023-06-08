@@ -17,3 +17,12 @@ definitions:
         type: array
         items:
           $ref: ./book_author.yml#/definitions/BookAuthor
+
+  SuccessCreateBook:
+    allOf:
+      - $ref: './common.yml#/definitions/Success'
+      - type: object
+        properties:
+          book_id:
+            type: number
+            format: uint64

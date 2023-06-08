@@ -1,0 +1,44 @@
+post:
+  tags: [book]
+  summary: 'Create'
+  description: 'Create book'
+  operationId: createBook
+  security:
+    - authorization: []
+  parameters:
+    - name: data
+      in: body
+      required: true
+      schema:
+        type: object
+        required:
+          - "title"
+          - "isbn"
+          - "published_year"
+          - "author_ids"
+        properties: 
+          title:
+            type: string
+            minLength: 1
+          isbn:
+            type: string
+            minLength: 1
+          published_year:
+            type: number
+            format: int64
+          author_ids:
+            type: array
+            items:
+              type: number
+              minItems: 1
+              uniqueItems: true
+
+  responses:
+    201:
+      description: 'Success create'
+      schema:
+        $ref: './../../../definitions/book.yml#/definitions/SuccessCreateBook'
+    default:
+      schema:
+        $ref: './../../../definitions/common.yml#/definitions/Error'
+      description: Server Error

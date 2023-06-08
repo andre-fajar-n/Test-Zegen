@@ -16,6 +16,8 @@ type (
 
 	authorRepository interface {
 		CreateAuthor(ctx context.Context, tx *gorm.DB, data *models.Author) (*models.Author, error)
+		FindOneAuthorByFilter(ctx context.Context, filter []ColumnValue, isDeleted bool) (*models.Author, error)
+		UpdateAuthor(ctx context.Context, tx *gorm.DB, data *models.Author) error
 	}
 
 	userRepository interface {
@@ -26,6 +28,11 @@ type (
 
 	repository struct {
 		rt runtime.Runtime
+	}
+
+	ColumnValue struct {
+		Column string
+		Value  interface{}
 	}
 )
 

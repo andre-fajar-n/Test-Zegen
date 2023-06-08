@@ -75,6 +75,11 @@ func configureAPI(api *operations.ServerAPI) http.Handler {
 			return middleware.NotImplemented("operation authentication.Register has not yet been implemented")
 		})
 	}
+	if api.AuthorUpdateAuthorHandler == nil {
+		api.AuthorUpdateAuthorHandler = author.UpdateAuthorHandlerFunc(func(params author.UpdateAuthorParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation author.UpdateAuthor has not yet been implemented")
+		})
+	}
 
 	api.PreServerShutdown = func() {}
 

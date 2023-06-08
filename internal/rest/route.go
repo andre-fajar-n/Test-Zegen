@@ -8,6 +8,7 @@ import (
 	"zegen/gen/restapi/operations/author"
 	"zegen/gen/restapi/operations/health"
 	"zegen/internal/handlers"
+	"zegen/internal/utils"
 	"zegen/runtime"
 
 	"github.com/go-openapi/runtime/middleware"
@@ -76,11 +77,25 @@ func Route(rt *runtime.Runtime, api *operations.ServerAPI, apiHandler handlers.I
 			}
 			return author.NewCreateAuthorCreated().WithPayload(&models.SuccessCreateAuthor{
 				Success: models.Success{
-					Message: "success create",
+					Message: utils.SUCCESS_CREATE,
 				},
 				SuccessCreateAuthorAllOf1: models.SuccessCreateAuthorAllOf1{
 					AuthorID: *authorID,
 				},
+			})
+		})
+
+		api.AuthorUpdateAuthorHandler = author.UpdateAuthorHandlerFunc(func(uap author.UpdateAuthorParams, p *models.Principal) middleware.Responder {
+			err := apiHandler.UpdateAuthor(context.Background(), &uap)
+			if err != nil {
+				errRes := rt.GetError(err)
+				return author.NewUpdateAuthorDefault(int(errRes.Code())).WithPayload(&models.Error{
+					Code:    int64(errRes.Code()),
+					Message: errRes.Error(),
+				})
+			}
+			return author.NewUpdateAuthorOK().WithPayload(&models.Success{
+				Message: utils.SUCCESS_UPDATE,
 			})
 		})
 	}

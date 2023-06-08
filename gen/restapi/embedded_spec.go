@@ -98,6 +98,52 @@ func init() {
         }
       }
     },
+    "/v1/author/{author_id}": {
+      "put": {
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "description": "Update author",
+        "tags": [
+          "author"
+        ],
+        "summary": "Update",
+        "operationId": "updateAuthor",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "uint64",
+            "name": "author_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/updateAuthorParamsBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success create",
+            "schema": {
+              "$ref": "#/definitions/success"
+            }
+          },
+          "default": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
     "/v1/login": {
       "post": {
         "security": [],
@@ -473,6 +519,24 @@ func init() {
         }
       },
       "x-go-gen-location": "models"
+    },
+    "updateAuthorParamsBody": {
+      "type": "object",
+      "required": [
+        "name",
+        "country"
+      ],
+      "properties": {
+        "country": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "x-go-gen-location": "operations"
     },
     "userData": {
       "type": "object",
@@ -577,6 +641,52 @@ func init() {
         }
       }
     },
+    "/v1/author/{author_id}": {
+      "put": {
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "description": "Update author",
+        "tags": [
+          "author"
+        ],
+        "summary": "Update",
+        "operationId": "updateAuthor",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "uint64",
+            "name": "author_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/updateAuthorParamsBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success create",
+            "schema": {
+              "$ref": "#/definitions/success"
+            }
+          },
+          "default": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
     "/v1/login": {
       "post": {
         "security": [],
@@ -952,6 +1062,24 @@ func init() {
         }
       },
       "x-go-gen-location": "models"
+    },
+    "updateAuthorParamsBody": {
+      "type": "object",
+      "required": [
+        "name",
+        "country"
+      ],
+      "properties": {
+        "country": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "x-go-gen-location": "operations"
     },
     "userData": {
       "type": "object",

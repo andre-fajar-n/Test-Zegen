@@ -1,0 +1,7 @@
+parameters:
+  PathAuthorID:
+    name: author_id
+    required: true
+    in: path
+    type: integer
+    format: uint64

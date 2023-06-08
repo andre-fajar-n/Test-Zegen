@@ -27,9 +27,12 @@ paths:
   # /v1/profile:
     # $ref: ./path/v1/user/profile.yml
 
-  # user
+  # author
   /v1/author:
     $ref: ./path/v1/author/author.yml
+
+  /v1/author/{author_id}:
+    $ref: ./path/v1/author/author.id.yml
 
 definitions:
   Principal:

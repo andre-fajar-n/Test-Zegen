@@ -60,6 +60,9 @@ func NewServerAPI(spec *loads.Document) *ServerAPI {
 		AuthenticationRegisterHandler: authentication.RegisterHandlerFunc(func(params authentication.RegisterParams) middleware.Responder {
 			return middleware.NotImplemented("operation authentication.Register has not yet been implemented")
 		}),
+		AuthorUpdateAuthorHandler: author.UpdateAuthorHandlerFunc(func(params author.UpdateAuthorParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation author.UpdateAuthor has not yet been implemented")
+		}),
 
 		// Applies when the "Authorization" header is set
 		AuthorizationAuth: func(token string) (*models.Principal, error) {
@@ -121,6 +124,8 @@ type ServerAPI struct {
 	AuthenticationLoginHandler authentication.LoginHandler
 	// AuthenticationRegisterHandler sets the operation handler for the register operation
 	AuthenticationRegisterHandler authentication.RegisterHandler
+	// AuthorUpdateAuthorHandler sets the operation handler for the update author operation
+	AuthorUpdateAuthorHandler author.UpdateAuthorHandler
 
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
@@ -216,6 +221,9 @@ func (o *ServerAPI) Validate() error {
 	}
 	if o.AuthenticationRegisterHandler == nil {
 		unregistered = append(unregistered, "authentication.RegisterHandler")
+	}
+	if o.AuthorUpdateAuthorHandler == nil {
+		unregistered = append(unregistered, "author.UpdateAuthorHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -334,6 +342,10 @@ func (o *ServerAPI) initHandlerCache() {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/v1/register"] = authentication.NewRegister(o.context, o.AuthenticationRegisterHandler)
+	if o.handlers["PUT"] == nil {
+		o.handlers["PUT"] = make(map[string]http.Handler)
+	}
+	o.handlers["PUT"]["/v1/author/{author_id}"] = author.NewUpdateAuthor(o.context, o.AuthorUpdateAuthorHandler)
 }
 
 // Serve creates a http handler to serve the API over HTTP

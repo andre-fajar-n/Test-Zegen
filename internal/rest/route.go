@@ -7,14 +7,14 @@ import (
 	"zegen/gen/restapi/operations/authentication"
 	"zegen/gen/restapi/operations/author"
 	"zegen/gen/restapi/operations/health"
-	"zegen/internal/handlers"
+	"zegen/internal/services"
 	"zegen/internal/utils"
 	"zegen/runtime"
 
 	"github.com/go-openapi/runtime/middleware"
 )
 
-func Route(rt *runtime.Runtime, api *operations.ServerAPI, apiHandler handlers.IHandler) {
+func Route(rt *runtime.Runtime, api *operations.ServerAPI, apiService services.IService) {
 	//  health
 	api.HealthHealthHandler = health.HealthHandlerFunc(func(hp health.HealthParams) middleware.Responder {
 		return health.NewHealthOK().WithPayload(&models.Success{
@@ -25,7 +25,7 @@ func Route(rt *runtime.Runtime, api *operations.ServerAPI, apiHandler handlers.I
 	// authentication
 	{
 		api.AuthenticationRegisterHandler = authentication.RegisterHandlerFunc(func(rp authentication.RegisterParams) middleware.Responder {
-			userID, err := apiHandler.Register(context.Background(), rp)
+			userID, err := apiService.Register(context.Background(), rp)
 			if err != nil {
 				errRes := rt.GetError(err)
 				return authentication.NewRegisterDefault(int(errRes.Code())).WithPayload(&models.Error{
@@ -44,7 +44,7 @@ func Route(rt *runtime.Runtime, api *operations.ServerAPI, apiHandler handlers.I
 		})
 
 		api.AuthenticationLoginHandler = authentication.LoginHandlerFunc(func(lp authentication.LoginParams) middleware.Responder {
-			token, expiredAt, err := apiHandler.Login(context.Background(), &lp)
+			token, expiredAt, err := apiService.Login(context.Background(), &lp)
 			if err != nil {
 				errRes := rt.GetError(err)
 				return authentication.NewLoginDefault(int(errRes.Code())).WithPayload(&models.Error{
@@ -67,7 +67,7 @@ func Route(rt *runtime.Runtime, api *operations.ServerAPI, apiHandler handlers.I
 	// author
 	{
 		api.AuthorCreateAuthorHandler = author.CreateAuthorHandlerFunc(func(cap author.CreateAuthorParams, p *models.Principal) middleware.Responder {
-			authorID, err := apiHandler.CreateAuthor(context.Background(), &cap)
+			authorID, err := apiService.CreateAuthor(context.Background(), &cap)
 			if err != nil {
 				errRes := rt.GetError(err)
 				return author.NewCreateAuthorDefault(int(errRes.Code())).WithPayload(&models.Error{
@@ -86,7 +86,7 @@ func Route(rt *runtime.Runtime, api *operations.ServerAPI, apiHandler handlers.I
 		})
 
 		api.AuthorUpdateAuthorHandler = author.UpdateAuthorHandlerFunc(func(uap author.UpdateAuthorParams, p *models.Principal) middleware.Responder {
-			err := apiHandler.UpdateAuthor(context.Background(), &uap)
+			err := apiService.UpdateAuthor(context.Background(), &uap)
 			if err != nil {
 				errRes := rt.GetError(err)
 				return author.NewUpdateAuthorDefault(int(errRes.Code())).WithPayload(&models.Error{
@@ -100,7 +100,7 @@ func Route(rt *runtime.Runtime, api *operations.ServerAPI, apiHandler handlers.I
 		})
 
 		api.AuthorSoftDeleteAuthorHandler = author.SoftDeleteAuthorHandlerFunc(func(sdap author.SoftDeleteAuthorParams, p *models.Principal) middleware.Responder {
-			err := apiHandler.SoftDeleteAuthor(context.Background(), &sdap)
+			err := apiService.SoftDeleteAuthor(context.Background(), &sdap)
 			if err != nil {
 				errRes := rt.GetError(err)
 				return author.NewSoftDeleteAuthorDefault(int(errRes.Code())).WithPayload(&models.Error{

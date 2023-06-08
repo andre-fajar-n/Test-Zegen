@@ -6,9 +6,9 @@ import (
 	"os"
 	"zegen/gen/restapi"
 	"zegen/gen/restapi/operations"
-	"zegen/internal/handlers"
 	"zegen/internal/repositories"
 	"zegen/internal/rest"
+	"zegen/internal/services"
 	"zegen/runtime"
 
 	"github.com/casualjim/middlewares"
@@ -67,10 +67,10 @@ func Main() {
 
 	repo := repositories.New(*rt)
 
-	h := handlers.NewHandler(*rt, repo)
+	s := services.New(*rt, repo)
 
 	rest.Authorization(rt, api)
-	rest.Route(rt, api, h)
+	rest.Route(rt, api, s)
 
 	api.Logger = func(s string, i ...interface{}) {
 		msg := "Logger: " + s

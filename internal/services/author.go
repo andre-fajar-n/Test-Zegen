@@ -1,4 +1,4 @@
-package handlers
+package services
 
 import (
 	"context"
@@ -10,8 +10,8 @@ import (
 	"github.com/go-openapi/strfmt"
 )
 
-func (h *handler) CreateAuthor(ctx context.Context, form *author.CreateAuthorParams) (*uint64, error) {
-	logger := h.rt.Logger.With().
+func (s *service) CreateAuthor(ctx context.Context, form *author.CreateAuthorParams) (*uint64, error) {
+	logger := s.rt.Logger.With().
 		Interface("form", form.Data).
 		Logger()
 
@@ -29,7 +29,7 @@ func (h *handler) CreateAuthor(ctx context.Context, form *author.CreateAuthorPar
 	}
 	var err error
 
-	data, err = h.repo.CreateAuthor(ctx, nil, data)
+	data, err = s.repo.CreateAuthor(ctx, nil, data)
 	if err != nil {
 		logger.Error().Err(err).Msg("error repo.CreateAuthor")
 		return nil, err
@@ -38,8 +38,8 @@ func (h *handler) CreateAuthor(ctx context.Context, form *author.CreateAuthorPar
 	return data.ID, nil
 }
 
-func (h *handler) UpdateAuthor(ctx context.Context, form *author.UpdateAuthorParams) error {
-	logger := h.rt.Logger.With().
+func (s *service) UpdateAuthor(ctx context.Context, form *author.UpdateAuthorParams) error {
+	logger := s.rt.Logger.With().
 		Uint64("authorID", form.AuthorID).
 		Interface("form", form.Data).
 		Logger()
@@ -50,7 +50,7 @@ func (h *handler) UpdateAuthor(ctx context.Context, form *author.UpdateAuthorPar
 			Value:  form.AuthorID,
 		},
 	}
-	currData, err := h.repo.FindOneAuthorByFilter(ctx, filter, false)
+	currData, err := s.repo.FindOneAuthorByFilter(ctx, filter, false)
 	if err != nil {
 		logger.Error().Err(err).Msg("error repo.FindOneAuthorByFilter")
 		return err
@@ -63,7 +63,7 @@ func (h *handler) UpdateAuthor(ctx context.Context, form *author.UpdateAuthorPar
 	currData.Country = *form.Data.Country
 	currData.UpdatedAt = &nowStrfmt
 
-	err = h.repo.UpdateAuthor(ctx, nil, currData)
+	err = s.repo.UpdateAuthor(ctx, nil, currData)
 	if err != nil {
 		logger.Error().Err(err).Msg("error repo.UpdateAuthor")
 		return err
@@ -72,8 +72,8 @@ func (h *handler) UpdateAuthor(ctx context.Context, form *author.UpdateAuthorPar
 	return nil
 }
 
-func (h *handler) SoftDeleteAuthor(ctx context.Context, form *author.SoftDeleteAuthorParams) error {
-	logger := h.rt.Logger.With().
+func (s *service) SoftDeleteAuthor(ctx context.Context, form *author.SoftDeleteAuthorParams) error {
+	logger := s.rt.Logger.With().
 		Uint64("authorID", form.AuthorID).
 		Logger()
 
@@ -83,7 +83,7 @@ func (h *handler) SoftDeleteAuthor(ctx context.Context, form *author.SoftDeleteA
 			Value:  form.AuthorID,
 		},
 	}
-	_, err := h.repo.FindOneAuthorByFilter(ctx, filter, false)
+	_, err := s.repo.FindOneAuthorByFilter(ctx, filter, false)
 	if err != nil {
 		logger.Error().Err(err).Msg("error repo.FindOneAuthorByFilter")
 		return err
@@ -91,7 +91,7 @@ func (h *handler) SoftDeleteAuthor(ctx context.Context, form *author.SoftDeleteA
 
 	now := time.Now().UTC()
 
-	err = h.repo.SoftDeleteAuthor(ctx, nil, form.AuthorID, now)
+	err = s.repo.SoftDeleteAuthor(ctx, nil, form.AuthorID, now)
 	if err != nil {
 		logger.Error().Err(err).Msg("error repo.SoftDeleteAuthor")
 		return err

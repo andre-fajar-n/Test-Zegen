@@ -137,35 +137,6 @@ func init() {
         }
       }
     },
-    "/v1/profile": {
-      "get": {
-        "security": [
-          {
-            "authorization": []
-          }
-        ],
-        "description": "Find my user data",
-        "tags": [
-          "user"
-        ],
-        "summary": "Find My User Data",
-        "operationId": "findMyUserData",
-        "responses": {
-          "200": {
-            "description": "Success fetch data",
-            "schema": {
-              "$ref": "#/definitions/myUserData"
-            }
-          },
-          "default": {
-            "description": "Server Error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
-          }
-        }
-      }
-    },
     "/v1/register": {
       "post": {
         "security": [],
@@ -415,15 +386,6 @@ func init() {
           "format": "date-time",
           "x-go-custom-tag": "gorm:\"column:updated_at\"",
           "x-nullable": true,
-          "x-omitempty": false
-        }
-      }
-    },
-    "myUserData": {
-      "type": "object",
-      "properties": {
-        "username": {
-          "type": "string",
           "x-omitempty": false
         }
       }
@@ -654,35 +616,6 @@ func init() {
         }
       }
     },
-    "/v1/profile": {
-      "get": {
-        "security": [
-          {
-            "authorization": []
-          }
-        ],
-        "description": "Find my user data",
-        "tags": [
-          "user"
-        ],
-        "summary": "Find My User Data",
-        "operationId": "findMyUserData",
-        "responses": {
-          "200": {
-            "description": "Success fetch data",
-            "schema": {
-              "$ref": "#/definitions/myUserData"
-            }
-          },
-          "default": {
-            "description": "Server Error",
-            "schema": {
-              "$ref": "#/definitions/error"
-            }
-          }
-        }
-      }
-    },
     "/v1/register": {
       "post": {
         "security": [],
@@ -932,15 +865,6 @@ func init() {
           "format": "date-time",
           "x-go-custom-tag": "gorm:\"column:updated_at\"",
           "x-nullable": true,
-          "x-omitempty": false
-        }
-      }
-    },
-    "myUserData": {
-      "type": "object",
-      "properties": {
-        "username": {
-          "type": "string",
           "x-omitempty": false
         }
       }

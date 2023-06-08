@@ -10,11 +10,14 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
 
+	"zegen/gen/models"
 	"zegen/gen/restapi/operations"
+	"zegen/gen/restapi/operations/authentication"
+	"zegen/gen/restapi/operations/author"
 	"zegen/gen/restapi/operations/health"
 )
 
-//go:generate swagger generate server --target ../../gen --name Server --spec ../../api/go-template/result.yml --principal models.Principal --exclude-main
+//go:generate swagger generate server --target ../../gen --name Server --spec ../../api/zegen/result.yml --principal models.Principal --exclude-main
 
 func configureFlags(api *operations.ServerAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
@@ -39,9 +42,37 @@ func configureAPI(api *operations.ServerAPI) http.Handler {
 
 	api.JSONProducer = runtime.JSONProducer()
 
+	// Applies when the "Authorization" header is set
+	if api.AuthorizationAuth == nil {
+		api.AuthorizationAuth = func(token string) (*models.Principal, error) {
+			return nil, errors.NotImplemented("api key auth (authorization) Authorization from header param [Authorization] has not yet been implemented")
+		}
+	}
+
+	// Set your custom authorizer if needed. Default one is security.Authorized()
+	// Expected interface runtime.Authorizer
+	//
+	// Example:
+	// api.APIAuthorizer = security.Authorized()
+
+	if api.AuthorCreateAuthorHandler == nil {
+		api.AuthorCreateAuthorHandler = author.CreateAuthorHandlerFunc(func(params author.CreateAuthorParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation author.CreateAuthor has not yet been implemented")
+		})
+	}
 	if api.HealthHealthHandler == nil {
 		api.HealthHealthHandler = health.HealthHandlerFunc(func(params health.HealthParams) middleware.Responder {
 			return middleware.NotImplemented("operation health.Health has not yet been implemented")
+		})
+	}
+	if api.AuthenticationLoginHandler == nil {
+		api.AuthenticationLoginHandler = authentication.LoginHandlerFunc(func(params authentication.LoginParams) middleware.Responder {
+			return middleware.NotImplemented("operation authentication.Login has not yet been implemented")
+		})
+	}
+	if api.AuthenticationRegisterHandler == nil {
+		api.AuthenticationRegisterHandler = authentication.RegisterHandlerFunc(func(params authentication.RegisterParams) middleware.Responder {
+			return middleware.NotImplemented("operation authentication.Register has not yet been implemented")
 		})
 	}
 

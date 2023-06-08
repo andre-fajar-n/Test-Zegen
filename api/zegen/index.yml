@@ -24,8 +24,8 @@ paths:
     $ref: ./path/v1/authentication/login.yml
 
   # user
-  /v1/profile:
-    $ref: ./path/v1/user/profile.yml
+  # /v1/profile:
+    # $ref: ./path/v1/user/profile.yml
 
   # user
   /v1/author:

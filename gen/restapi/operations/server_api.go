@@ -23,7 +23,6 @@ import (
 	"zegen/gen/restapi/operations/authentication"
 	"zegen/gen/restapi/operations/author"
 	"zegen/gen/restapi/operations/health"
-	"zegen/gen/restapi/operations/user"
 )
 
 // NewServerAPI creates a new Server instance
@@ -51,9 +50,6 @@ func NewServerAPI(spec *loads.Document) *ServerAPI {
 
 		AuthorCreateAuthorHandler: author.CreateAuthorHandlerFunc(func(params author.CreateAuthorParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation author.CreateAuthor has not yet been implemented")
-		}),
-		UserFindMyUserDataHandler: user.FindMyUserDataHandlerFunc(func(params user.FindMyUserDataParams, principal *models.Principal) middleware.Responder {
-			return middleware.NotImplemented("operation user.FindMyUserData has not yet been implemented")
 		}),
 		HealthHealthHandler: health.HealthHandlerFunc(func(params health.HealthParams) middleware.Responder {
 			return middleware.NotImplemented("operation health.Health has not yet been implemented")
@@ -119,8 +115,6 @@ type ServerAPI struct {
 
 	// AuthorCreateAuthorHandler sets the operation handler for the create author operation
 	AuthorCreateAuthorHandler author.CreateAuthorHandler
-	// UserFindMyUserDataHandler sets the operation handler for the find my user data operation
-	UserFindMyUserDataHandler user.FindMyUserDataHandler
 	// HealthHealthHandler sets the operation handler for the health operation
 	HealthHealthHandler health.HealthHandler
 	// AuthenticationLoginHandler sets the operation handler for the login operation
@@ -213,9 +207,6 @@ func (o *ServerAPI) Validate() error {
 
 	if o.AuthorCreateAuthorHandler == nil {
 		unregistered = append(unregistered, "author.CreateAuthorHandler")
-	}
-	if o.UserFindMyUserDataHandler == nil {
-		unregistered = append(unregistered, "user.FindMyUserDataHandler")
 	}
 	if o.HealthHealthHandler == nil {
 		unregistered = append(unregistered, "health.HealthHandler")
@@ -331,10 +322,6 @@ func (o *ServerAPI) initHandlerCache() {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/v1/author"] = author.NewCreateAuthor(o.context, o.AuthorCreateAuthorHandler)
-	if o.handlers["GET"] == nil {
-		o.handlers["GET"] = make(map[string]http.Handler)
-	}
-	o.handlers["GET"]["/v1/profile"] = user.NewFindMyUserData(o.context, o.UserFindMyUserDataHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}

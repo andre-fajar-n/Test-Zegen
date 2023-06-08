@@ -24,7 +24,7 @@ clean:
 	# remove all files inside /gen/models except custom_fields_valuer_scanner.go
 	find ./gen/models -mindepth 1 -name custom_fields_valuer_scanner.go -prune -o -exec rm -rf {} +
 	rm -rf server
-	rm -rf ./gen/rest
+	rm -rf ./gen/restapi
 	go clean -i .
 
 generate: validate

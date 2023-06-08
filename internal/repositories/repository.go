@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"context"
+	"time"
 	"zegen/gen/models"
 	"zegen/runtime"
 
@@ -18,6 +19,7 @@ type (
 		CreateAuthor(ctx context.Context, tx *gorm.DB, data *models.Author) (*models.Author, error)
 		FindOneAuthorByFilter(ctx context.Context, filter []ColumnValue, isDeleted bool) (*models.Author, error)
 		UpdateAuthor(ctx context.Context, tx *gorm.DB, data *models.Author) error
+		SoftDeleteAuthor(ctx context.Context, tx *gorm.DB, authorID uint64, deletedAt time.Time) error
 	}
 
 	userRepository interface {

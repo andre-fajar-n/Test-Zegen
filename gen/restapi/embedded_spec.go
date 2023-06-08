@@ -130,7 +130,43 @@ func init() {
         ],
         "responses": {
           "200": {
-            "description": "Success create",
+            "description": "Success update",
+            "schema": {
+              "$ref": "#/definitions/success"
+            }
+          },
+          "default": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "description": "Soft delete author",
+        "tags": [
+          "author"
+        ],
+        "summary": "Soft Delete",
+        "operationId": "softDeleteAuthor",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "uint64",
+            "name": "author_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success delete",
             "schema": {
               "$ref": "#/definitions/success"
             }
@@ -673,7 +709,43 @@ func init() {
         ],
         "responses": {
           "200": {
-            "description": "Success create",
+            "description": "Success update",
+            "schema": {
+              "$ref": "#/definitions/success"
+            }
+          },
+          "default": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "description": "Soft delete author",
+        "tags": [
+          "author"
+        ],
+        "summary": "Soft Delete",
+        "operationId": "softDeleteAuthor",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "uint64",
+            "name": "author_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success delete",
             "schema": {
               "$ref": "#/definitions/success"
             }

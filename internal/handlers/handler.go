@@ -22,6 +22,7 @@ type (
 	authorHandler interface {
 		CreateAuthor(ctx context.Context, form *author.CreateAuthorParams) (*uint64, error)
 		UpdateAuthor(ctx context.Context, form *author.UpdateAuthorParams) error
+		SoftDeleteAuthor(ctx context.Context, form *author.SoftDeleteAuthorParams) error
 	}
 
 	handler struct {

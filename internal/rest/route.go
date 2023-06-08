@@ -98,5 +98,19 @@ func Route(rt *runtime.Runtime, api *operations.ServerAPI, apiHandler handlers.I
 				Message: utils.SUCCESS_UPDATE,
 			})
 		})
+
+		api.AuthorSoftDeleteAuthorHandler = author.SoftDeleteAuthorHandlerFunc(func(sdap author.SoftDeleteAuthorParams, p *models.Principal) middleware.Responder {
+			err := apiHandler.SoftDeleteAuthor(context.Background(), &sdap)
+			if err != nil {
+				errRes := rt.GetError(err)
+				return author.NewSoftDeleteAuthorDefault(int(errRes.Code())).WithPayload(&models.Error{
+					Code:    int64(errRes.Code()),
+					Message: errRes.Error(),
+				})
+			}
+			return author.NewSoftDeleteAuthorOK().WithPayload(&models.Success{
+				Message: utils.SUCCESS_DELETE,
+			})
+		})
 	}
 }

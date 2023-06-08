@@ -9,4 +9,5 @@ const (
 const (
 	SUCCESS_CREATE = "success create"
 	SUCCESS_UPDATE = "success update"
+	SUCCESS_DELETE = "success delete"
 )

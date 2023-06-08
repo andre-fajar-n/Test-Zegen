@@ -25,7 +25,27 @@ put:
 
   responses:
     200:
-      description: 'Success create'
+      description: 'Success update'
+      schema:
+        $ref: './../../../definitions/common.yml#/definitions/Success'
+    default:
+      description: Server Error
+      schema:
+        $ref: './../../../definitions/common.yml#/definitions/Error'
+
+delete:
+  tags: [author]
+  summary: 'Soft Delete'
+  description: 'Soft delete author'
+  operationId: softDeleteAuthor
+  security:
+    - authorization: []
+  parameters:
+    - $ref: ./../../../parameters/author.yml#/parameters/PathAuthorID
+
+  responses:
+    200:
+      description: 'Success delete'
       schema:
         $ref: './../../../definitions/common.yml#/definitions/Success'
     default:

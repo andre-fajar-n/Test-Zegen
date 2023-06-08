@@ -71,3 +71,31 @@ func (h *handler) UpdateAuthor(ctx context.Context, form *author.UpdateAuthorPar
 
 	return nil
 }
+
+func (h *handler) SoftDeleteAuthor(ctx context.Context, form *author.SoftDeleteAuthorParams) error {
+	logger := h.rt.Logger.With().
+		Uint64("authorID", form.AuthorID).
+		Logger()
+
+	filter := []repositories.ColumnValue{
+		{
+			Column: "id",
+			Value:  form.AuthorID,
+		},
+	}
+	_, err := h.repo.FindOneAuthorByFilter(ctx, filter, false)
+	if err != nil {
+		logger.Error().Err(err).Msg("error repo.FindOneAuthorByFilter")
+		return err
+	}
+
+	now := time.Now().UTC()
+
+	err = h.repo.SoftDeleteAuthor(ctx, nil, form.AuthorID, now)
+	if err != nil {
+		logger.Error().Err(err).Msg("error repo.SoftDeleteAuthor")
+		return err
+	}
+
+	return nil
+}

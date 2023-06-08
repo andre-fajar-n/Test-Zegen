@@ -3,6 +3,7 @@ package repositories
 import (
 	"context"
 	"net/http"
+	"time"
 	"zegen/gen/models"
 	"zegen/internal/utils"
 
@@ -66,7 +67,25 @@ func (r *repository) UpdateAuthor(ctx context.Context, tx *gorm.DB, data *models
 	}
 
 	tx = tx.Select("*").Updates(&data)
+	if err := tx.Error; err != nil {
+		logger.Error().Err(err).Msg("error query")
+		return err
+	}
 
+	return nil
+}
+
+func (r *repository) SoftDeleteAuthor(ctx context.Context, tx *gorm.DB, authorID uint64, deletedAt time.Time) error {
+	logger := r.rt.Logger.With().
+		Uint64("authorID", authorID).
+		Time("deletedAt", deletedAt).
+		Logger()
+
+	if tx == nil {
+		tx = r.rt.Db
+	}
+
+	tx = tx.Model(&models.Author{}).Where("id", authorID).Update("deleted_at", deletedAt)
 	if err := tx.Error; err != nil {
 		logger.Error().Err(err).Msg("error query")
 		return err

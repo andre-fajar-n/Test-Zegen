@@ -60,6 +60,9 @@ func NewServerAPI(spec *loads.Document) *ServerAPI {
 		AuthenticationRegisterHandler: authentication.RegisterHandlerFunc(func(params authentication.RegisterParams) middleware.Responder {
 			return middleware.NotImplemented("operation authentication.Register has not yet been implemented")
 		}),
+		AuthorSoftDeleteAuthorHandler: author.SoftDeleteAuthorHandlerFunc(func(params author.SoftDeleteAuthorParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation author.SoftDeleteAuthor has not yet been implemented")
+		}),
 		AuthorUpdateAuthorHandler: author.UpdateAuthorHandlerFunc(func(params author.UpdateAuthorParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation author.UpdateAuthor has not yet been implemented")
 		}),
@@ -124,6 +127,8 @@ type ServerAPI struct {
 	AuthenticationLoginHandler authentication.LoginHandler
 	// AuthenticationRegisterHandler sets the operation handler for the register operation
 	AuthenticationRegisterHandler authentication.RegisterHandler
+	// AuthorSoftDeleteAuthorHandler sets the operation handler for the soft delete author operation
+	AuthorSoftDeleteAuthorHandler author.SoftDeleteAuthorHandler
 	// AuthorUpdateAuthorHandler sets the operation handler for the update author operation
 	AuthorUpdateAuthorHandler author.UpdateAuthorHandler
 
@@ -221,6 +226,9 @@ func (o *ServerAPI) Validate() error {
 	}
 	if o.AuthenticationRegisterHandler == nil {
 		unregistered = append(unregistered, "authentication.RegisterHandler")
+	}
+	if o.AuthorSoftDeleteAuthorHandler == nil {
+		unregistered = append(unregistered, "author.SoftDeleteAuthorHandler")
 	}
 	if o.AuthorUpdateAuthorHandler == nil {
 		unregistered = append(unregistered, "author.UpdateAuthorHandler")
@@ -342,6 +350,10 @@ func (o *ServerAPI) initHandlerCache() {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/v1/register"] = authentication.NewRegister(o.context, o.AuthenticationRegisterHandler)
+	if o.handlers["DELETE"] == nil {
+		o.handlers["DELETE"] = make(map[string]http.Handler)
+	}
+	o.handlers["DELETE"]["/v1/author/{author_id}"] = author.NewSoftDeleteAuthor(o.context, o.AuthorSoftDeleteAuthorHandler)
 	if o.handlers["PUT"] == nil {
 		o.handlers["PUT"] = make(map[string]http.Handler)
 	}

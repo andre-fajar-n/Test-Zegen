@@ -17,7 +17,7 @@ import (
 const UpdateAuthorOKCode int = 200
 
 /*
-UpdateAuthorOK Success create
+UpdateAuthorOK Success update
 
 swagger:response updateAuthorOK
 */

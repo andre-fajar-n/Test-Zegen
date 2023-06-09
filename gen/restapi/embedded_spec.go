@@ -100,11 +100,6 @@ func init() {
     },
     "/v1/author/{author_id}": {
       "get": {
-        "security": [
-          {
-            "authorization": []
-          }
-        ],
         "description": "Find one author",
         "tags": [
           "author"
@@ -256,6 +251,37 @@ func init() {
       }
     },
     "/v1/book/{book_id}": {
+      "get": {
+        "description": "Find one book",
+        "tags": [
+          "book"
+        ],
+        "summary": "Find One",
+        "operationId": "findOneBook",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "uint64",
+            "name": "book_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success find data",
+            "schema": {
+              "$ref": "#/definitions/successFindOneBook"
+            }
+          },
+          "default": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
       "put": {
         "security": [
           {
@@ -505,6 +531,9 @@ func init() {
         },
         {
           "$ref": "#/definitions/bookAuthorData"
+        },
+        {
+          "$ref": "#/definitions/bookAuthorForeignKey"
         }
       ]
     },
@@ -520,6 +549,51 @@ func init() {
           "format": "uint64"
         }
       }
+    },
+    "bookAuthorForeignKey": {
+      "type": "object",
+      "properties": {
+        "author": {
+          "$ref": "#/definitions/bookAuthorForeignKeyAuthor"
+        },
+        "book": {
+          "$ref": "#/definitions/bookAuthorForeignKeyBook"
+        }
+      }
+    },
+    "bookAuthorForeignKeyAuthor": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/modelIdentifier"
+        },
+        {
+          "$ref": "#/definitions/modelTrackTime"
+        },
+        {
+          "$ref": "#/definitions/authorData"
+        },
+        {
+          "$ref": "#/definitions/authorForeignKey"
+        }
+      ],
+      "x-go-gen-location": "models"
+    },
+    "bookAuthorForeignKeyBook": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/modelIdentifier"
+        },
+        {
+          "$ref": "#/definitions/modelTrackTime"
+        },
+        {
+          "$ref": "#/definitions/bookData"
+        },
+        {
+          "$ref": "#/definitions/bookForeignKey"
+        }
+      ],
+      "x-go-gen-location": "models"
     },
     "bookData": {
       "type": "object",
@@ -762,6 +836,65 @@ func init() {
       ],
       "x-go-gen-location": "models"
     },
+    "successFindOneBook": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/success"
+        },
+        {
+          "$ref": "#/definitions/successFindOneBookAllOf1"
+        }
+      ]
+    },
+    "successFindOneBookAllOf1": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/successFindOneBookAllOf1Data"
+        }
+      },
+      "x-go-gen-location": "models"
+    },
+    "successFindOneBookAllOf1Data": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/modelIdentifier"
+        },
+        {
+          "$ref": "#/definitions/bookData"
+        },
+        {
+          "$ref": "#/definitions/modelTrackTime"
+        },
+        {
+          "$ref": "#/definitions/successFindOneBookAllOf1DataAllOf3"
+        }
+      ],
+      "x-go-gen-location": "models"
+    },
+    "successFindOneBookAllOf1DataAllOf3": {
+      "type": "object",
+      "properties": {
+        "authors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/successFindOneBookAllOf1DataAllOf3AuthorsItems"
+          }
+        }
+      },
+      "x-go-gen-location": "models"
+    },
+    "successFindOneBookAllOf1DataAllOf3AuthorsItems": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/modelIdentifier"
+        },
+        {
+          "$ref": "#/definitions/authorData"
+        }
+      ],
+      "x-go-gen-location": "models"
+    },
     "successLogin": {
       "allOf": [
         {
@@ -957,11 +1090,6 @@ func init() {
     },
     "/v1/author/{author_id}": {
       "get": {
-        "security": [
-          {
-            "authorization": []
-          }
-        ],
         "description": "Find one author",
         "tags": [
           "author"
@@ -1113,6 +1241,37 @@ func init() {
       }
     },
     "/v1/book/{book_id}": {
+      "get": {
+        "description": "Find one book",
+        "tags": [
+          "book"
+        ],
+        "summary": "Find One",
+        "operationId": "findOneBook",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "uint64",
+            "name": "book_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success find data",
+            "schema": {
+              "$ref": "#/definitions/successFindOneBook"
+            }
+          },
+          "default": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
       "put": {
         "security": [
           {
@@ -1362,6 +1521,9 @@ func init() {
         },
         {
           "$ref": "#/definitions/bookAuthorData"
+        },
+        {
+          "$ref": "#/definitions/bookAuthorForeignKey"
         }
       ]
     },
@@ -1377,6 +1539,51 @@ func init() {
           "format": "uint64"
         }
       }
+    },
+    "bookAuthorForeignKey": {
+      "type": "object",
+      "properties": {
+        "author": {
+          "$ref": "#/definitions/bookAuthorForeignKeyAuthor"
+        },
+        "book": {
+          "$ref": "#/definitions/bookAuthorForeignKeyBook"
+        }
+      }
+    },
+    "bookAuthorForeignKeyAuthor": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/modelIdentifier"
+        },
+        {
+          "$ref": "#/definitions/modelTrackTime"
+        },
+        {
+          "$ref": "#/definitions/authorData"
+        },
+        {
+          "$ref": "#/definitions/authorForeignKey"
+        }
+      ],
+      "x-go-gen-location": "models"
+    },
+    "bookAuthorForeignKeyBook": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/modelIdentifier"
+        },
+        {
+          "$ref": "#/definitions/modelTrackTime"
+        },
+        {
+          "$ref": "#/definitions/bookData"
+        },
+        {
+          "$ref": "#/definitions/bookForeignKey"
+        }
+      ],
+      "x-go-gen-location": "models"
     },
     "bookData": {
       "type": "object",
@@ -1613,6 +1820,65 @@ func init() {
         },
         {
           "$ref": "#/definitions/modelTrackTime"
+        }
+      ],
+      "x-go-gen-location": "models"
+    },
+    "successFindOneBook": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/success"
+        },
+        {
+          "$ref": "#/definitions/successFindOneBookAllOf1"
+        }
+      ]
+    },
+    "successFindOneBookAllOf1": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/successFindOneBookAllOf1Data"
+        }
+      },
+      "x-go-gen-location": "models"
+    },
+    "successFindOneBookAllOf1Data": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/modelIdentifier"
+        },
+        {
+          "$ref": "#/definitions/bookData"
+        },
+        {
+          "$ref": "#/definitions/modelTrackTime"
+        },
+        {
+          "$ref": "#/definitions/successFindOneBookAllOf1DataAllOf3"
+        }
+      ],
+      "x-go-gen-location": "models"
+    },
+    "successFindOneBookAllOf1DataAllOf3": {
+      "type": "object",
+      "properties": {
+        "authors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/successFindOneBookAllOf1DataAllOf3AuthorsItems"
+          }
+        }
+      },
+      "x-go-gen-location": "models"
+    },
+    "successFindOneBookAllOf1DataAllOf3AuthorsItems": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/modelIdentifier"
+        },
+        {
+          "$ref": "#/definitions/authorData"
         }
       ],
       "x-go-gen-location": "models"

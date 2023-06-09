@@ -13,21 +13,21 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// BookAuthor book author
+// BookAuthorForeignKeyAuthor book author foreign key author
 //
-// swagger:model bookAuthor
-type BookAuthor struct {
+// swagger:model bookAuthorForeignKeyAuthor
+type BookAuthorForeignKeyAuthor struct {
 	ModelIdentifier
 
 	ModelTrackTime
 
-	BookAuthorData
+	AuthorData
 
-	BookAuthorForeignKey
+	AuthorForeignKey
 }
 
 // UnmarshalJSON unmarshals this object from a JSON structure
-func (m *BookAuthor) UnmarshalJSON(raw []byte) error {
+func (m *BookAuthorForeignKeyAuthor) UnmarshalJSON(raw []byte) error {
 	// AO0
 	var aO0 ModelIdentifier
 	if err := swag.ReadJSON(raw, &aO0); err != nil {
@@ -43,24 +43,24 @@ func (m *BookAuthor) UnmarshalJSON(raw []byte) error {
 	m.ModelTrackTime = aO1
 
 	// AO2
-	var aO2 BookAuthorData
+	var aO2 AuthorData
 	if err := swag.ReadJSON(raw, &aO2); err != nil {
 		return err
 	}
-	m.BookAuthorData = aO2
+	m.AuthorData = aO2
 
 	// AO3
-	var aO3 BookAuthorForeignKey
+	var aO3 AuthorForeignKey
 	if err := swag.ReadJSON(raw, &aO3); err != nil {
 		return err
 	}
-	m.BookAuthorForeignKey = aO3
+	m.AuthorForeignKey = aO3
 
 	return nil
 }
 
 // MarshalJSON marshals this object to a JSON structure
-func (m BookAuthor) MarshalJSON() ([]byte, error) {
+func (m BookAuthorForeignKeyAuthor) MarshalJSON() ([]byte, error) {
 	_parts := make([][]byte, 0, 4)
 
 	aO0, err := swag.WriteJSON(m.ModelIdentifier)
@@ -75,13 +75,13 @@ func (m BookAuthor) MarshalJSON() ([]byte, error) {
 	}
 	_parts = append(_parts, aO1)
 
-	aO2, err := swag.WriteJSON(m.BookAuthorData)
+	aO2, err := swag.WriteJSON(m.AuthorData)
 	if err != nil {
 		return nil, err
 	}
 	_parts = append(_parts, aO2)
 
-	aO3, err := swag.WriteJSON(m.BookAuthorForeignKey)
+	aO3, err := swag.WriteJSON(m.AuthorForeignKey)
 	if err != nil {
 		return nil, err
 	}
@@ -89,8 +89,8 @@ func (m BookAuthor) MarshalJSON() ([]byte, error) {
 	return swag.ConcatJSON(_parts...), nil
 }
 
-// Validate validates this book author
-func (m *BookAuthor) Validate(formats strfmt.Registry) error {
+// Validate validates this book author foreign key author
+func (m *BookAuthorForeignKeyAuthor) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	// validation for a type composition with ModelIdentifier
@@ -101,12 +101,12 @@ func (m *BookAuthor) Validate(formats strfmt.Registry) error {
 	if err := m.ModelTrackTime.Validate(formats); err != nil {
 		res = append(res, err)
 	}
-	// validation for a type composition with BookAuthorData
-	if err := m.BookAuthorData.Validate(formats); err != nil {
+	// validation for a type composition with AuthorData
+	if err := m.AuthorData.Validate(formats); err != nil {
 		res = append(res, err)
 	}
-	// validation for a type composition with BookAuthorForeignKey
-	if err := m.BookAuthorForeignKey.Validate(formats); err != nil {
+	// validation for a type composition with AuthorForeignKey
+	if err := m.AuthorForeignKey.Validate(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -116,8 +116,8 @@ func (m *BookAuthor) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validate this book author based on the context it is used
-func (m *BookAuthor) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this book author foreign key author based on the context it is used
+func (m *BookAuthorForeignKeyAuthor) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	// validation for a type composition with ModelIdentifier
@@ -128,12 +128,12 @@ func (m *BookAuthor) ContextValidate(ctx context.Context, formats strfmt.Registr
 	if err := m.ModelTrackTime.ContextValidate(ctx, formats); err != nil {
 		res = append(res, err)
 	}
-	// validation for a type composition with BookAuthorData
-	if err := m.BookAuthorData.ContextValidate(ctx, formats); err != nil {
+	// validation for a type composition with AuthorData
+	if err := m.AuthorData.ContextValidate(ctx, formats); err != nil {
 		res = append(res, err)
 	}
-	// validation for a type composition with BookAuthorForeignKey
-	if err := m.BookAuthorForeignKey.ContextValidate(ctx, formats); err != nil {
+	// validation for a type composition with AuthorForeignKey
+	if err := m.AuthorForeignKey.ContextValidate(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -144,7 +144,7 @@ func (m *BookAuthor) ContextValidate(ctx context.Context, formats strfmt.Registr
 }
 
 // MarshalBinary interface implementation
-func (m *BookAuthor) MarshalBinary() ([]byte, error) {
+func (m *BookAuthorForeignKeyAuthor) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -152,8 +152,8 @@ func (m *BookAuthor) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *BookAuthor) UnmarshalBinary(b []byte) error {
-	var res BookAuthor
+func (m *BookAuthorForeignKeyAuthor) UnmarshalBinary(b []byte) error {
+	var res BookAuthorForeignKeyAuthor
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

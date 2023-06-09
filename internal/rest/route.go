@@ -114,7 +114,7 @@ func Route(rt *runtime.Runtime, api *operations.ServerAPI, apiService services.I
 			})
 		})
 
-		api.AuthorFindOneAuthorHandler = author.FindOneAuthorHandlerFunc(func(foap author.FindOneAuthorParams, p *models.Principal) middleware.Responder {
+		api.AuthorFindOneAuthorHandler = author.FindOneAuthorHandlerFunc(func(foap author.FindOneAuthorParams) middleware.Responder {
 			data, err := apiService.FindOneAuthor(context.Background(), &foap)
 			if err != nil {
 				errRes := rt.GetError(err)
@@ -178,6 +178,23 @@ func Route(rt *runtime.Runtime, api *operations.ServerAPI, apiService services.I
 			}
 			return book.NewSoftDeleteBookOK().WithPayload(&models.Success{
 				Message: utils.SUCCESS_DELETE,
+			})
+		})
+
+		api.BookFindOneBookHandler = book.FindOneBookHandlerFunc(func(fobp book.FindOneBookParams) middleware.Responder {
+			data, err := apiService.FindOneBook(context.Background(), &fobp)
+			if err != nil {
+				errRes := rt.GetError(err)
+				return book.NewFindOneBookDefault(int(errRes.Code())).WithPayload(&models.Error{
+					Code:    int64(errRes.Code()),
+					Message: errRes.Error(),
+				})
+			}
+			return book.NewFindOneBookOK().WithPayload(&models.SuccessFindOneBook{
+				Success: models.Success{
+					Message: utils.SUCCESS_CREATE,
+				},
+				SuccessFindOneBookAllOf1: *data,
 			})
 		})
 	}

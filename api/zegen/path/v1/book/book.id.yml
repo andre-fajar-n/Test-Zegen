@@ -64,3 +64,21 @@ delete:
       description: Server Error
       schema:
         $ref: './../../../definitions/common.yml#/definitions/Error'
+
+get:
+  tags: [book]
+  summary: 'Find One'
+  description: 'Find one book'
+  operationId: findOneBook
+  parameters:
+    - $ref: ./../../../parameters/book.yml#/parameters/PathBookID
+
+  responses:
+    200:
+      description: 'Success find data'
+      schema:
+        $ref: './../../../definitions/book.yml#/definitions/SuccessFindOneBook'
+    default:
+      description: Server Error
+      schema:
+        $ref: './../../../definitions/common.yml#/definitions/Error'

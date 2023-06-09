@@ -33,6 +33,7 @@ type (
 		CreateBook(ctx context.Context, form *book.CreateBookParams) (*uint64, error)
 		UpdateBook(ctx context.Context, form *book.UpdateBookParams) error
 		SoftDeleteBook(ctx context.Context, form *book.SoftDeleteBookParams) error
+		FindOneBook(ctx context.Context, form *book.FindOneBookParams) (*models.SuccessFindOneBookAllOf1, error)
 	}
 
 	service struct {

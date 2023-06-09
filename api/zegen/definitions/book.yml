@@ -26,3 +26,22 @@ definitions:
           book_id:
             type: number
             format: uint64
+
+  SuccessFindOneBook:
+    allOf:
+    - $ref: ./common.yml#/definitions/Success
+    - type: object
+      properties:
+        data:
+          allOf:
+          - $ref: ./common.yml#/definitions/ModelIdentifier
+          - $ref: '#/definitions/BookData'
+          - $ref: ./common.yml#/definitions/ModelTrackTime
+          - type: object
+            properties:
+              authors:
+                type: array
+                items:
+                  allOf:
+                  - $ref: ./common.yml#/definitions/ModelIdentifier
+                  - $ref: ./author.yml#/definitions/AuthorData

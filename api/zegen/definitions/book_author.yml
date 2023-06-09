@@ -4,6 +4,13 @@ definitions:
     - $ref: "./common.yml#/definitions/ModelIdentifier"
     - $ref: "./common.yml#/definitions/ModelTrackTime"
     - $ref: '#/definitions/BookAuthorData'
+    # - type: object
+    #   properties:
+    #     book:
+    #       $ref: ./../index.yml#/definitions/Book
+    #     author:
+    #       $ref: ./../index.yml#/definitions/Author
+    - $ref: '#/definitions/BookAuthorForeignKey'
 
   BookAuthorData:
     type: object
@@ -14,3 +21,11 @@ definitions:
       author_id:
         type: number
         format: uint64
+
+  BookAuthorForeignKey:
+    type: object
+    properties:
+      book:
+        $ref: ./../index.yml#/definitions/Book
+      author:
+        $ref: ./../index.yml#/definitions/Author

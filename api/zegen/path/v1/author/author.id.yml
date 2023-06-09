@@ -58,8 +58,6 @@ get:
   summary: 'Find One'
   description: 'Find one author'
   operationId: findOneAuthor
-  security:
-    - authorization: []
   parameters:
     - $ref: ./../../../parameters/author.yml#/parameters/PathAuthorID
 

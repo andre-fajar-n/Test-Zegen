@@ -13,21 +13,21 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// BookAuthor book author
+// SuccessFindOneBookAllOf1Data success find one book all of1 data
 //
-// swagger:model bookAuthor
-type BookAuthor struct {
+// swagger:model successFindOneBookAllOf1Data
+type SuccessFindOneBookAllOf1Data struct {
 	ModelIdentifier
+
+	BookData
 
 	ModelTrackTime
 
-	BookAuthorData
-
-	BookAuthorForeignKey
+	SuccessFindOneBookAllOf1DataAllOf3
 }
 
 // UnmarshalJSON unmarshals this object from a JSON structure
-func (m *BookAuthor) UnmarshalJSON(raw []byte) error {
+func (m *SuccessFindOneBookAllOf1Data) UnmarshalJSON(raw []byte) error {
 	// AO0
 	var aO0 ModelIdentifier
 	if err := swag.ReadJSON(raw, &aO0); err != nil {
@@ -36,31 +36,31 @@ func (m *BookAuthor) UnmarshalJSON(raw []byte) error {
 	m.ModelIdentifier = aO0
 
 	// AO1
-	var aO1 ModelTrackTime
+	var aO1 BookData
 	if err := swag.ReadJSON(raw, &aO1); err != nil {
 		return err
 	}
-	m.ModelTrackTime = aO1
+	m.BookData = aO1
 
 	// AO2
-	var aO2 BookAuthorData
+	var aO2 ModelTrackTime
 	if err := swag.ReadJSON(raw, &aO2); err != nil {
 		return err
 	}
-	m.BookAuthorData = aO2
+	m.ModelTrackTime = aO2
 
 	// AO3
-	var aO3 BookAuthorForeignKey
+	var aO3 SuccessFindOneBookAllOf1DataAllOf3
 	if err := swag.ReadJSON(raw, &aO3); err != nil {
 		return err
 	}
-	m.BookAuthorForeignKey = aO3
+	m.SuccessFindOneBookAllOf1DataAllOf3 = aO3
 
 	return nil
 }
 
 // MarshalJSON marshals this object to a JSON structure
-func (m BookAuthor) MarshalJSON() ([]byte, error) {
+func (m SuccessFindOneBookAllOf1Data) MarshalJSON() ([]byte, error) {
 	_parts := make([][]byte, 0, 4)
 
 	aO0, err := swag.WriteJSON(m.ModelIdentifier)
@@ -69,19 +69,19 @@ func (m BookAuthor) MarshalJSON() ([]byte, error) {
 	}
 	_parts = append(_parts, aO0)
 
-	aO1, err := swag.WriteJSON(m.ModelTrackTime)
+	aO1, err := swag.WriteJSON(m.BookData)
 	if err != nil {
 		return nil, err
 	}
 	_parts = append(_parts, aO1)
 
-	aO2, err := swag.WriteJSON(m.BookAuthorData)
+	aO2, err := swag.WriteJSON(m.ModelTrackTime)
 	if err != nil {
 		return nil, err
 	}
 	_parts = append(_parts, aO2)
 
-	aO3, err := swag.WriteJSON(m.BookAuthorForeignKey)
+	aO3, err := swag.WriteJSON(m.SuccessFindOneBookAllOf1DataAllOf3)
 	if err != nil {
 		return nil, err
 	}
@@ -89,24 +89,24 @@ func (m BookAuthor) MarshalJSON() ([]byte, error) {
 	return swag.ConcatJSON(_parts...), nil
 }
 
-// Validate validates this book author
-func (m *BookAuthor) Validate(formats strfmt.Registry) error {
+// Validate validates this success find one book all of1 data
+func (m *SuccessFindOneBookAllOf1Data) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	// validation for a type composition with ModelIdentifier
 	if err := m.ModelIdentifier.Validate(formats); err != nil {
 		res = append(res, err)
 	}
+	// validation for a type composition with BookData
+	if err := m.BookData.Validate(formats); err != nil {
+		res = append(res, err)
+	}
 	// validation for a type composition with ModelTrackTime
 	if err := m.ModelTrackTime.Validate(formats); err != nil {
 		res = append(res, err)
 	}
-	// validation for a type composition with BookAuthorData
-	if err := m.BookAuthorData.Validate(formats); err != nil {
-		res = append(res, err)
-	}
-	// validation for a type composition with BookAuthorForeignKey
-	if err := m.BookAuthorForeignKey.Validate(formats); err != nil {
+	// validation for a type composition with SuccessFindOneBookAllOf1DataAllOf3
+	if err := m.SuccessFindOneBookAllOf1DataAllOf3.Validate(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -116,24 +116,24 @@ func (m *BookAuthor) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validate this book author based on the context it is used
-func (m *BookAuthor) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this success find one book all of1 data based on the context it is used
+func (m *SuccessFindOneBookAllOf1Data) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	// validation for a type composition with ModelIdentifier
 	if err := m.ModelIdentifier.ContextValidate(ctx, formats); err != nil {
 		res = append(res, err)
 	}
+	// validation for a type composition with BookData
+	if err := m.BookData.ContextValidate(ctx, formats); err != nil {
+		res = append(res, err)
+	}
 	// validation for a type composition with ModelTrackTime
 	if err := m.ModelTrackTime.ContextValidate(ctx, formats); err != nil {
 		res = append(res, err)
 	}
-	// validation for a type composition with BookAuthorData
-	if err := m.BookAuthorData.ContextValidate(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-	// validation for a type composition with BookAuthorForeignKey
-	if err := m.BookAuthorForeignKey.ContextValidate(ctx, formats); err != nil {
+	// validation for a type composition with SuccessFindOneBookAllOf1DataAllOf3
+	if err := m.SuccessFindOneBookAllOf1DataAllOf3.ContextValidate(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -144,7 +144,7 @@ func (m *BookAuthor) ContextValidate(ctx context.Context, formats strfmt.Registr
 }
 
 // MarshalBinary interface implementation
-func (m *BookAuthor) MarshalBinary() ([]byte, error) {
+func (m *SuccessFindOneBookAllOf1Data) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -152,8 +152,8 @@ func (m *BookAuthor) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *BookAuthor) UnmarshalBinary(b []byte) error {
-	var res BookAuthor
+func (m *SuccessFindOneBookAllOf1Data) UnmarshalBinary(b []byte) error {
+	var res SuccessFindOneBookAllOf1Data
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

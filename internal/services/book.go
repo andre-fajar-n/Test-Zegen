@@ -200,3 +200,40 @@ func (s *service) SoftDeleteBook(ctx context.Context, form *book.SoftDeleteBookP
 
 	return nil
 }
+
+func (s *service) FindOneBook(ctx context.Context, form *book.FindOneBookParams) (*models.SuccessFindOneBookAllOf1, error) {
+	logger := s.rt.Logger.With().
+		Uint64("bookID", form.BookID).
+		Logger()
+
+	filter := []repositories.ColumnValue{
+		{
+			Column: "id",
+			Value:  form.BookID,
+		},
+	}
+	data, err := s.repo.FindOneBookByFilter(ctx, filter, false)
+	if err != nil {
+		logger.Error().Err(err).Msg("error repo.FindOneBookByFilter")
+		return nil, err
+	}
+
+	authors := make([]*models.SuccessFindOneBookAllOf1DataAllOf3AuthorsItems, len(data.Authors))
+	for i, v := range data.Authors {
+		authors[i] = &models.SuccessFindOneBookAllOf1DataAllOf3AuthorsItems{
+			ModelIdentifier: v.Author.ModelIdentifier,
+			AuthorData:      v.Author.AuthorData,
+		}
+	}
+
+	output := models.SuccessFindOneBookAllOf1{
+		Data: &models.SuccessFindOneBookAllOf1Data{
+			ModelIdentifier:                    data.ModelIdentifier,
+			BookData:                           data.BookData,
+			ModelTrackTime:                     data.ModelTrackTime,
+			SuccessFindOneBookAllOf1DataAllOf3: models.SuccessFindOneBookAllOf1DataAllOf3{Authors: authors},
+		},
+	}
+
+	return &output, nil
+}

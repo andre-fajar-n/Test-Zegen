@@ -92,17 +92,63 @@ func (s *service) UpdateBook(ctx context.Context, form *book.UpdateBookParams) e
 		return err
 	}
 
+	authors, err := s.repo.FindAuthorsByIDs(ctx, form.Data.AuthorIds, false)
+	if err != nil {
+		logger.Error().Err(err).Msg("error repo.FindAuthorsByIDs")
+		return err
+	}
+
+	if len(authors) != len(form.Data.AuthorIds) {
+		return s.rt.SetError(http.StatusBadRequest, utils.ERR_THERE_IS_DATA_DELETED)
+	}
+
 	now := time.Now().UTC()
 	nowStrfmt := strfmt.DateTime(now)
+
+	bookAuthors := make([]*models.BookAuthor, 0)
+
+	// map key: authorID
+	// index location in authors
+	mapCurrAuthorByAuthorID := make(map[uint64]int)
+	for i, v := range currData.Authors {
+		mapCurrAuthorByAuthorID[v.AuthorID] = i
+		v.DeletedAt = &nowStrfmt
+		bookAuthors = append(bookAuthors, v)
+	}
+
+	for _, v := range authors {
+		val, ok := mapCurrAuthorByAuthorID[*v.ID]
+		if ok {
+			bookAuthors[val].DeletedAt = nil
+		} else {
+			bookAuthors = append(bookAuthors, &models.BookAuthor{
+				BookAuthorData: models.BookAuthorData{
+					AuthorID: *v.ID,
+				},
+				ModelTrackTime: models.ModelTrackTime{
+					CreatedAt: &nowStrfmt,
+				},
+			})
+		}
+	}
 
 	currData.Title = *form.Data.Title
 	currData.PublishedYear = *form.Data.PublishedYear
 	currData.Isbn = *form.Data.Isbn
+	currData.Authors = bookAuthors
 	currData.UpdatedAt = &nowStrfmt
 
-	err = s.repo.UpdateBook(ctx, nil, currData)
+	err = s.rt.Db.Transaction(func(tx *gorm.DB) error {
+		err = s.repo.UpdateBook(ctx, tx, currData)
+		if err != nil {
+			logger.Error().Err(err).Msg("error repo.UpdateBook")
+			return err
+		}
+
+		return nil
+	})
 	if err != nil {
-		logger.Error().Err(err).Msg("error repo.UpdateBook")
+		logger.Error().Err(err).Msg("error transaction")
 		return err
 	}
 

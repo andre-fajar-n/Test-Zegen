@@ -34,8 +34,8 @@ func (r *repository) FindOneBookByFilter(ctx context.Context, filter []ColumnVal
 		Bool("isDeleted", isDeleted).
 		Logger()
 
-	authorModel := models.Book{}
-	db := r.rt.Db.Model(&authorModel)
+	bookModel := models.Book{}
+	db := r.rt.Db.Model(&bookModel)
 
 	for _, v := range filter {
 		db = db.Where(v.Column, v.Value)
@@ -45,7 +45,7 @@ func (r *repository) FindOneBookByFilter(ctx context.Context, filter []ColumnVal
 		db = db.Where("deleted_at IS NULL")
 	}
 
-	err := db.First(&authorModel).Error
+	err := db.Preload("Authors").First(&bookModel).Error
 	if err == gorm.ErrRecordNotFound {
 		return nil, r.rt.SetError(http.StatusNotFound, utils.ERR_AUTHOR_NOT_FOUND)
 	}
@@ -54,7 +54,7 @@ func (r *repository) FindOneBookByFilter(ctx context.Context, filter []ColumnVal
 		return nil, err
 	}
 
-	return &authorModel, nil
+	return &bookModel, nil
 }
 
 func (r *repository) UpdateBook(ctx context.Context, tx *gorm.DB, data *models.Book) error {
@@ -66,7 +66,7 @@ func (r *repository) UpdateBook(ctx context.Context, tx *gorm.DB, data *models.B
 		tx = r.rt.Db
 	}
 
-	tx = tx.Select("*").Updates(&data)
+	tx = tx.Select("*").Session(&gorm.Session{FullSaveAssociations: true}).Updates(&data)
 	if err := tx.Error; err != nil {
 		logger.Error().Err(err).Msg("error query")
 		return err

@@ -101,7 +101,7 @@ func (r *repository) FindAuthorsByIDs(ctx context.Context, IDs []uint64, isDelet
 		Logger()
 
 	output := []models.Author{}
-	db := r.rt.Db
+	db := r.rt.Db.Where("id IN (?)", IDs)
 
 	if !isDeleted {
 		db = db.Where("deleted_at IS NULL")

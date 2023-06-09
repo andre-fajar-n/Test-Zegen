@@ -52,3 +52,23 @@ delete:
       description: Server Error
       schema:
         $ref: './../../../definitions/common.yml#/definitions/Error'
+
+get:
+  tags: [author]
+  summary: 'Find One'
+  description: 'Find one author'
+  operationId: findOneAuthor
+  security:
+    - authorization: []
+  parameters:
+    - $ref: ./../../../parameters/author.yml#/parameters/PathAuthorID
+
+  responses:
+    200:
+      description: 'Success find data'
+      schema:
+        $ref: './../../../definitions/author.yml#/definitions/SuccessFindOneAuthor'
+    default:
+      description: Server Error
+      schema:
+        $ref: './../../../definitions/common.yml#/definitions/Error'

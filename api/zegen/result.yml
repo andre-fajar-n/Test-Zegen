@@ -10,46 +10,83 @@ info:
     title: Zegen
     version: 1.0.0
 paths:
-    /v1/book/{book_id}:
-        put:
+    /v1/author:
+        post:
             security:
                 - authorization: []
-            description: Update book
+            description: Create author
             tags:
-                - book
-            summary: Update
-            operationId: updateBook
+                - author
+            summary: Create
+            operationId: createAuthor
+            parameters:
+                - schema:
+                    $ref: '#/definitions/createAuthorParamsBody'
+                  name: data
+                  in: body
+                  required: true
+            responses:
+                "201":
+                    description: Success create
+                    schema:
+                        $ref: '#/definitions/successCreateAuthor'
+                default:
+                    description: Server Error
+                    schema:
+                        $ref: '#/definitions/error'
+    /v1/author/{author_id}:
+        get:
+            responses:
+                "200":
+                    description: Success find data
+                    schema:
+                        $ref: '#/definitions/successFindOneAuthor'
+                default:
+                    description: Server Error
+                    schema:
+                        $ref: '#/definitions/error'
+            security:
+                - authorization: []
+            description: Find one author
+            tags:
+                - author
+            summary: Find One
+            operationId: findOneAuthor
             parameters:
                 - format: uint64
-                  name: book_id
+                  name: author_id
                   in: path
                   required: true
                   type: integer
-                - in: body
+        put:
+            tags:
+                - author
+            summary: Update
+            operationId: updateAuthor
+            parameters:
+                - type: integer
+                  format: uint64
+                  name: author_id
+                  in: path
                   required: true
-                  schema:
-                    $ref: '#/definitions/updateBookParamsBody'
+                - schema:
+                    $ref: '#/definitions/updateAuthorParamsBody'
                   name: data
+                  in: body
+                  required: true
             responses:
                 "200":
                     description: Success update
                     schema:
                         $ref: '#/definitions/success'
                 default:
+                    description: Server Error
                     schema:
                         $ref: '#/definitions/error'
-                    description: Server Error
+            security:
+                - authorization: []
+            description: Update author
         delete:
-            tags:
-                - book
-            summary: Soft Delete
-            operationId: softDeleteBook
-            parameters:
-                - name: book_id
-                  in: path
-                  required: true
-                  type: integer
-                  format: uint64
             responses:
                 "200":
                     description: Success delete
@@ -61,14 +98,101 @@ paths:
                         $ref: '#/definitions/error'
             security:
                 - authorization: []
-            description: Soft delete book
-    /v1/login:
+            description: Soft delete author
+            tags:
+                - author
+            summary: Soft Delete
+            operationId: softDeleteAuthor
+            parameters:
+                - name: author_id
+                  in: path
+                  required: true
+                  type: integer
+                  format: uint64
+    /v1/book:
         post:
+            security:
+                - authorization: []
+            description: Create book
+            tags:
+                - book
+            summary: Create
+            operationId: createBook
             parameters:
                 - name: data
                   in: body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/createBookParamsBody'
+            responses:
+                "201":
+                    description: Success create
+                    schema:
+                        $ref: '#/definitions/successCreateBook'
+                default:
+                    description: Server Error
+                    schema:
+                        $ref: '#/definitions/error'
+    /v1/book/{book_id}:
+        put:
+            security:
+                - authorization: []
+            description: Update book
+            tags:
+                - book
+            summary: Update
+            operationId: updateBook
+            parameters:
+                - type: integer
+                  format: uint64
+                  name: book_id
+                  in: path
+                  required: true
+                - name: data
+                  in: body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/updateBookParamsBody'
+            responses:
+                "200":
+                    description: Success update
+                    schema:
+                        $ref: '#/definitions/success'
+                default:
+                    description: Server Error
+                    schema:
+                        $ref: '#/definitions/error'
+        delete:
+            security:
+                - authorization: []
+            description: Soft delete book
+            tags:
+                - book
+            summary: Soft Delete
+            operationId: softDeleteBook
+            parameters:
+                - in: path
+                  required: true
+                  type: integer
+                  format: uint64
+                  name: book_id
+            responses:
+                "200":
+                    description: Success delete
+                    schema:
+                        $ref: '#/definitions/success'
+                default:
+                    schema:
+                        $ref: '#/definitions/error'
+                    description: Server Error
+    /v1/login:
+        post:
+            operationId: login
+            parameters:
+                - in: body
                   schema:
                     $ref: '#/definitions/loginParamsBody'
+                  name: data
             responses:
                 "200":
                     description: Success login
@@ -86,18 +210,8 @@ paths:
             tags:
                 - authentication
             summary: Login
-            operationId: login
     /v1/register:
         post:
-            responses:
-                "201":
-                    description: Success register
-                    schema:
-                        $ref: '#/definitions/successRegister'
-                default:
-                    description: Server Error
-                    schema:
-                        $ref: '#/definitions/error'
             security: []
             description: Register user
             tags:
@@ -109,12 +223,17 @@ paths:
                   in: body
                   schema:
                     $ref: '#/definitions/registerParamsBody'
+            responses:
+                "201":
+                    schema:
+                        $ref: '#/definitions/successRegister'
+                    description: Success register
+                default:
+                    description: Server Error
+                    schema:
+                        $ref: '#/definitions/error'
     /health:
         get:
-            description: Check if the App is Running
-            tags:
-                - health
-            summary: Health Check
             operationId: health
             responses:
                 "200":
@@ -126,135 +245,28 @@ paths:
                     schema:
                         $ref: '#/definitions/error'
             security: []
-    /v1/author:
-        post:
+            description: Check if the App is Running
             tags:
-                - author
-            summary: Create
-            operationId: createAuthor
-            parameters:
-                - name: data
-                  in: body
-                  required: true
-                  schema:
-                    $ref: '#/definitions/createAuthorParamsBody'
-            responses:
-                "201":
-                    description: Success create
-                    schema:
-                        $ref: '#/definitions/successCreateAuthor'
-                default:
-                    description: Server Error
-                    schema:
-                        $ref: '#/definitions/error'
-            security:
-                - authorization: []
-            description: Create author
-    /v1/author/{author_id}:
-        delete:
-            description: Soft delete author
-            tags:
-                - author
-            summary: Soft Delete
-            operationId: softDeleteAuthor
-            parameters:
-                - type: integer
-                  format: uint64
-                  name: author_id
-                  in: path
-                  required: true
-            responses:
-                "200":
-                    description: Success delete
-                    schema:
-                        $ref: '#/definitions/success'
-                default:
-                    description: Server Error
-                    schema:
-                        $ref: '#/definitions/error'
-            security:
-                - authorization: []
-        put:
-            tags:
-                - author
-            summary: Update
-            operationId: updateAuthor
-            parameters:
-                - type: integer
-                  format: uint64
-                  name: author_id
-                  in: path
-                  required: true
-                - name: data
-                  in: body
-                  required: true
-                  schema:
-                    $ref: '#/definitions/updateAuthorParamsBody'
-            responses:
-                "200":
-                    schema:
-                        $ref: '#/definitions/success'
-                    description: Success update
-                default:
-                    description: Server Error
-                    schema:
-                        $ref: '#/definitions/error'
-            security:
-                - authorization: []
-            description: Update author
-    /v1/book:
-        post:
-            parameters:
-                - name: data
-                  in: body
-                  required: true
-                  schema:
-                    $ref: '#/definitions/createBookParamsBody'
-            responses:
-                "201":
-                    description: Success create
-                    schema:
-                        $ref: '#/definitions/successCreateBook'
-                default:
-                    description: Server Error
-                    schema:
-                        $ref: '#/definitions/error'
-            security:
-                - authorization: []
-            description: Create book
-            tags:
-                - book
-            summary: Create
-            operationId: createBook
+                - health
+            summary: Health Check
 definitions:
-    bookAuthorData:
+    success:
         type: object
         properties:
-            author_id:
-                type: number
-                format: uint64
+            message:
+                type: string
+    successCreateBookAllOf1:
+        type: object
+        properties:
             book_id:
                 type: number
                 format: uint64
-    bookData:
-        type: object
-        properties:
-            publishedYear:
-                type: number
-                format: int64
-            title:
-                type: string
-            isbn:
-                type: string
-    bookForeignKey:
-        type: object
-        properties:
-            authors:
-                type: array
-                items:
-                    $ref: '#/definitions/bookAuthor'
+        x-go-gen-location: models
+    successLogin:
+        allOf:
+            - $ref: '#/definitions/success'
+            - $ref: '#/definitions/successLoginAllOf1'
     createAuthorParamsBody:
-        x-go-gen-location: operations
         type: object
         required:
             - name
@@ -266,144 +278,7 @@ definitions:
             name:
                 minLength: !!float 1
                 type: string
-    authorForeignKey:
-        type: object
-        properties:
-            books:
-                type: array
-                items:
-                    $ref: '#/definitions/bookAuthor'
-    modelTrackTime:
-        type: object
-        properties:
-            created_at:
-                type: string
-                format: date-time
-                x-go-custom-tag: gorm:"column:created_at"
-                x-nullable: true
-                x-omitempty: false
-            deleted_at:
-                type: string
-                format: date-time
-                x-go-custom-tag: gorm:"column:deleted_at"
-                x-nullable: true
-                x-omitempty: false
-            updated_at:
-                format: date-time
-                x-go-custom-tag: gorm:"column:updated_at"
-                x-nullable: true
-                x-omitempty: false
-                type: string
-    successLogin:
-        allOf:
-            - $ref: '#/definitions/success'
-            - $ref: '#/definitions/successLoginAllOf1'
-    Author:
-        allOf:
-            - $ref: '#/definitions/modelIdentifier'
-            - $ref: '#/definitions/modelTrackTime'
-            - $ref: '#/definitions/authorData'
-            - $ref: '#/definitions/authorForeignKey'
-    Principal:
-        type: object
-        properties:
-            expired_at:
-                type: string
-                format: date-time
-            user_id:
-                type: number
-                format: uint64
-            username:
-                type: string
-    User:
-        allOf:
-            - $ref: '#/definitions/modelIdentifier'
-            - $ref: '#/definitions/modelTrackTime'
-            - $ref: '#/definitions/userData'
-    successLoginAllOf1:
-        x-go-gen-location: models
-        type: object
-        properties:
-            expired_at:
-                type: string
-    createBookParamsBody:
-        properties:
-            author_ids:
-                type: array
-                items:
-                    uniqueItems: true
-                    type: number
-                    format: uint64
-                    minItems: !!float 1
-            isbn:
-                minLength: !!float 1
-                type: string
-            published_year:
-                type: number
-                format: int64
-            title:
-                type: string
-                minLength: !!float 1
         x-go-gen-location: operations
-        type: object
-        required:
-            - title
-            - isbn
-            - published_year
-            - author_ids
-    successCreateBookAllOf1:
-        x-go-gen-location: models
-        type: object
-        properties:
-            book_id:
-                type: number
-                format: uint64
-    successRegister:
-        allOf:
-            - $ref: '#/definitions/success'
-            - $ref: '#/definitions/successRegisterAllOf1'
-    updateBookParamsBody:
-        properties:
-            author_ids:
-                items:
-                    type: number
-                    format: uint64
-                    minItems: !!float 1
-                    uniqueItems: true
-                type: array
-            isbn:
-                type: string
-                minLength: !!float 1
-            published_year:
-                type: number
-                format: int64
-            title:
-                type: string
-                minLength: !!float 1
-        x-go-gen-location: operations
-        type: object
-        required:
-            - title
-            - isbn
-            - published_year
-            - author_ids
-    authorData:
-        type: object
-        properties:
-            name:
-                type: string
-            country:
-                type: string
-    bookAuthor:
-        allOf:
-            - $ref: '#/definitions/modelIdentifier'
-            - $ref: '#/definitions/modelTrackTime'
-            - $ref: '#/definitions/bookAuthorData'
-    success:
-        type: object
-        properties:
-            message:
-                type: string
     error:
         type: object
         properties:
@@ -412,6 +287,156 @@ definitions:
             message:
                 type: string
                 example: error
+    modelIdentifier:
+        required:
+            - id
+        properties:
+            id:
+                type: integer
+                format: uint64
+        type: object
+    registerParamsBody:
+        type: object
+        required:
+            - username
+            - password
+        properties:
+            password:
+                minLength: !!float 8
+                type: string
+            username:
+                type: string
+        x-go-gen-location: operations
+    successCreateAuthor:
+        allOf:
+            - $ref: '#/definitions/success'
+            - $ref: '#/definitions/successCreateAuthorAllOf1'
+    updateBookParamsBody:
+        type: object
+        required:
+            - title
+            - isbn
+            - published_year
+            - author_ids
+        properties:
+            author_ids:
+                items:
+                    type: number
+                    format: uint64
+                    minItems: !!float 1
+                    uniqueItems: true
+                type: array
+            isbn:
+                minLength: !!float 1
+                type: string
+            published_year:
+                type: number
+                format: int64
+            title:
+                type: string
+                minLength: !!float 1
+        x-go-gen-location: operations
+    bookAuthor:
+        allOf:
+            - $ref: '#/definitions/modelIdentifier'
+            - $ref: '#/definitions/modelTrackTime'
+            - $ref: '#/definitions/bookAuthorData'
+    successFindOneAuthorAllOf1Data:
+        allOf:
+            - $ref: '#/definitions/modelIdentifier'
+            - $ref: '#/definitions/authorData'
+            - $ref: '#/definitions/modelTrackTime'
+        x-go-gen-location: models
+    successLoginAllOf1:
+        type: object
+        properties:
+            expired_at:
+                type: string
+        x-go-gen-location: models
+    updateAuthorParamsBody:
+        required:
+            - name
+            - country
+        properties:
+            country:
+                type: string
+                minLength: !!float 1
+            name:
+                type: string
+                minLength: !!float 1
+        x-go-gen-location: operations
+        type: object
+    authorData:
+        type: object
+        properties:
+            country:
+                type: string
+            name:
+                type: string
+    authorForeignKey:
+        type: object
+        properties:
+            books:
+                type: array
+                items:
+                    $ref: '#/definitions/bookAuthor'
+    createBookParamsBody:
+        x-go-gen-location: operations
+        type: object
+        required:
+            - title
+            - isbn
+            - published_year
+            - author_ids
+        properties:
+            author_ids:
+                type: array
+                items:
+                    type: number
+                    format: uint64
+                    minItems: !!float 1
+                    uniqueItems: true
+            isbn:
+                type: string
+                minLength: !!float 1
+            published_year:
+                type: number
+                format: int64
+            title:
+                type: string
+                minLength: !!float 1
+    bookAuthorData:
+        properties:
+            author_id:
+                type: number
+                format: uint64
+            book_id:
+                type: number
+                format: uint64
+        type: object
+    Author:
+        allOf:
+            - $ref: '#/definitions/modelIdentifier'
+            - $ref: '#/definitions/modelTrackTime'
+            - $ref: '#/definitions/authorData'
+            - $ref: '#/definitions/authorForeignKey'
+    Book:
+        allOf:
+            - $ref: '#/definitions/modelIdentifier'
+            - $ref: '#/definitions/modelTrackTime'
+            - $ref: '#/definitions/bookData'
+            - $ref: '#/definitions/bookForeignKey'
+    Principal:
+        type: object
+        properties:
+            username:
+                type: string
+            expired_at:
+                type: string
+                format: date-time
+            user_id:
+                type: number
+                format: uint64
     loginParamsBody:
         type: object
         required:
@@ -423,40 +448,72 @@ definitions:
             username:
                 type: string
         x-go-gen-location: operations
+    successFindOneAuthorAllOf1:
+        type: object
+        properties:
+            data:
+                $ref: '#/definitions/successFindOneAuthorAllOf1Data'
+        x-go-gen-location: models
+    userData:
+        type: object
+        properties:
+            password:
+                type: string
+                x-omitempty: false
+            username:
+                type: string
+                x-omitempty: false
+    bookData:
+        type: object
+        properties:
+            isbn:
+                type: string
+            publishedYear:
+                type: number
+                format: int64
+            title:
+                type: string
+    bookForeignKey:
+        type: object
+        properties:
+            authors:
+                type: array
+                items:
+                    $ref: '#/definitions/bookAuthor'
+    modelTrackTime:
+        type: object
+        properties:
+            deleted_at:
+                x-go-custom-tag: gorm:"column:deleted_at"
+                x-nullable: true
+                x-omitempty: false
+                type: string
+                format: date-time
+            updated_at:
+                x-go-custom-tag: gorm:"column:updated_at"
+                x-nullable: true
+                x-omitempty: false
+                type: string
+                format: date-time
+            created_at:
+                type: string
+                format: date-time
+                x-go-custom-tag: gorm:"column:created_at"
+                x-nullable: true
+                x-omitempty: false
     successCreateBook:
         allOf:
             - $ref: '#/definitions/success'
             - $ref: '#/definitions/successCreateBookAllOf1'
-    updateAuthorParamsBody:
-        type: object
-        required:
-            - name
-            - country
-        properties:
-            country:
-                type: string
-                minLength: !!float 1
-            name:
-                type: string
-                minLength: !!float 1
-        x-go-gen-location: operations
-    userData:
-        type: object
-        properties:
-            username:
-                type: string
-                x-omitempty: false
-            password:
-                type: string
-                x-omitempty: false
-    modelIdentifier:
-        required:
-            - id
-        properties:
-            id:
-                type: integer
-                format: uint64
-        type: object
+    successRegister:
+        allOf:
+            - $ref: '#/definitions/success'
+            - $ref: '#/definitions/successRegisterAllOf1'
+    User:
+        allOf:
+            - $ref: '#/definitions/modelIdentifier'
+            - $ref: '#/definitions/modelTrackTime'
+            - $ref: '#/definitions/userData'
     successCreateAuthorAllOf1:
         type: object
         properties:
@@ -464,35 +521,17 @@ definitions:
                 type: number
                 format: uint64
         x-go-gen-location: models
-    Book:
-        allOf:
-            - $ref: '#/definitions/modelIdentifier'
-            - $ref: '#/definitions/modelTrackTime'
-            - $ref: '#/definitions/bookData'
-            - $ref: '#/definitions/bookForeignKey'
-    registerParamsBody:
-        required:
-            - username
-            - password
-        properties:
-            password:
-                type: string
-                minLength: !!float 8
-            username:
-                type: string
-        x-go-gen-location: operations
-        type: object
-    successCreateAuthor:
+    successFindOneAuthor:
         allOf:
             - $ref: '#/definitions/success'
-            - $ref: '#/definitions/successCreateAuthorAllOf1'
+            - $ref: '#/definitions/successFindOneAuthorAllOf1'
     successRegisterAllOf1:
-        x-go-gen-location: models
         type: object
         properties:
             user_id:
-                format: uint64
                 type: number
+                format: uint64
+        x-go-gen-location: models
 securityDefinitions:
     authorization:
         type: apiKey

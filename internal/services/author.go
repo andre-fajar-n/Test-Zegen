@@ -99,3 +99,31 @@ func (s *service) SoftDeleteAuthor(ctx context.Context, form *author.SoftDeleteA
 
 	return nil
 }
+
+func (s *service) FindOneAuthor(ctx context.Context, form *author.FindOneAuthorParams) (*models.SuccessFindOneAuthorAllOf1, error) {
+	logger := s.rt.Logger.With().
+		Uint64("authorID", form.AuthorID).
+		Logger()
+
+	filter := []repositories.ColumnValue{
+		{
+			Column: "id",
+			Value:  form.AuthorID,
+		},
+	}
+	data, err := s.repo.FindOneAuthorByFilter(ctx, filter, false)
+	if err != nil {
+		logger.Error().Err(err).Msg("error repo.FindOneAuthorByFilter")
+		return nil, err
+	}
+
+	output := &models.SuccessFindOneAuthorAllOf1{
+		Data: &models.SuccessFindOneAuthorAllOf1Data{
+			ModelIdentifier: data.ModelIdentifier,
+			AuthorData:      data.AuthorData,
+			ModelTrackTime:  data.ModelTrackTime,
+		},
+	}
+
+	return output, nil
+}

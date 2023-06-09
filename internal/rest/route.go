@@ -113,6 +113,23 @@ func Route(rt *runtime.Runtime, api *operations.ServerAPI, apiService services.I
 				Message: utils.SUCCESS_DELETE,
 			})
 		})
+
+		api.AuthorFindOneAuthorHandler = author.FindOneAuthorHandlerFunc(func(foap author.FindOneAuthorParams, p *models.Principal) middleware.Responder {
+			data, err := apiService.FindOneAuthor(context.Background(), &foap)
+			if err != nil {
+				errRes := rt.GetError(err)
+				return author.NewFindOneAuthorDefault(int(errRes.Code())).WithPayload(&models.Error{
+					Code:    int64(errRes.Code()),
+					Message: errRes.Error(),
+				})
+			}
+			return author.NewFindOneAuthorOK().WithPayload(&models.SuccessFindOneAuthor{
+				Success: models.Success{
+					Message: utils.SUCCESS_CREATE,
+				},
+				SuccessFindOneAuthorAllOf1: *data,
+			})
+		})
 	}
 
 	// book

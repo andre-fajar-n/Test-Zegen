@@ -23,3 +23,14 @@ definitions:
           author_id:
             type: number
             format: uint64
+
+  SuccessFindOneAuthor:
+    allOf:
+    - $ref: ./common.yml#/definitions/Success
+    - type: object
+      properties:
+        data:
+          allOf:
+          - $ref: ./common.yml#/definitions/ModelIdentifier
+          - $ref: '#/definitions/AuthorData'
+          - $ref: ./common.yml#/definitions/ModelTrackTime

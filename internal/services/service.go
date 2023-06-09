@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"zegen/gen/models"
 	"zegen/gen/restapi/operations/authentication"
 	"zegen/gen/restapi/operations/author"
 	"zegen/gen/restapi/operations/book"
@@ -25,6 +26,7 @@ type (
 		CreateAuthor(ctx context.Context, form *author.CreateAuthorParams) (*uint64, error)
 		UpdateAuthor(ctx context.Context, form *author.UpdateAuthorParams) error
 		SoftDeleteAuthor(ctx context.Context, form *author.SoftDeleteAuthorParams) error
+		FindOneAuthor(ctx context.Context, form *author.FindOneAuthorParams) (*models.SuccessFindOneAuthorAllOf1, error)
 	}
 
 	bookService interface {

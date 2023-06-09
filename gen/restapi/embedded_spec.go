@@ -99,6 +99,42 @@ func init() {
       }
     },
     "/v1/author/{author_id}": {
+      "get": {
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "description": "Find one author",
+        "tags": [
+          "author"
+        ],
+        "summary": "Find One",
+        "operationId": "findOneAuthor",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "uint64",
+            "name": "author_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success find data",
+            "schema": {
+              "$ref": "#/definitions/successFindOneAuthor"
+            }
+          },
+          "default": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
       "put": {
         "security": [
           {
@@ -693,6 +729,39 @@ func init() {
       },
       "x-go-gen-location": "models"
     },
+    "successFindOneAuthor": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/success"
+        },
+        {
+          "$ref": "#/definitions/successFindOneAuthorAllOf1"
+        }
+      ]
+    },
+    "successFindOneAuthorAllOf1": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/successFindOneAuthorAllOf1Data"
+        }
+      },
+      "x-go-gen-location": "models"
+    },
+    "successFindOneAuthorAllOf1Data": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/modelIdentifier"
+        },
+        {
+          "$ref": "#/definitions/authorData"
+        },
+        {
+          "$ref": "#/definitions/modelTrackTime"
+        }
+      ],
+      "x-go-gen-location": "models"
+    },
     "successLogin": {
       "allOf": [
         {
@@ -887,6 +956,42 @@ func init() {
       }
     },
     "/v1/author/{author_id}": {
+      "get": {
+        "security": [
+          {
+            "authorization": []
+          }
+        ],
+        "description": "Find one author",
+        "tags": [
+          "author"
+        ],
+        "summary": "Find One",
+        "operationId": "findOneAuthor",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "uint64",
+            "name": "author_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success find data",
+            "schema": {
+              "$ref": "#/definitions/successFindOneAuthor"
+            }
+          },
+          "default": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
       "put": {
         "security": [
           {
@@ -1477,6 +1582,39 @@ func init() {
           "format": "uint64"
         }
       },
+      "x-go-gen-location": "models"
+    },
+    "successFindOneAuthor": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/success"
+        },
+        {
+          "$ref": "#/definitions/successFindOneAuthorAllOf1"
+        }
+      ]
+    },
+    "successFindOneAuthorAllOf1": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/successFindOneAuthorAllOf1Data"
+        }
+      },
+      "x-go-gen-location": "models"
+    },
+    "successFindOneAuthorAllOf1Data": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/modelIdentifier"
+        },
+        {
+          "$ref": "#/definitions/authorData"
+        },
+        {
+          "$ref": "#/definitions/modelTrackTime"
+        }
+      ],
       "x-go-gen-location": "models"
     },
     "successLogin": {

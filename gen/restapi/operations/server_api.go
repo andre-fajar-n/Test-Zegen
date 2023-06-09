@@ -55,6 +55,9 @@ func NewServerAPI(spec *loads.Document) *ServerAPI {
 		BookCreateBookHandler: book.CreateBookHandlerFunc(func(params book.CreateBookParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation book.CreateBook has not yet been implemented")
 		}),
+		AuthorFindOneAuthorHandler: author.FindOneAuthorHandlerFunc(func(params author.FindOneAuthorParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation author.FindOneAuthor has not yet been implemented")
+		}),
 		HealthHealthHandler: health.HealthHandlerFunc(func(params health.HealthParams) middleware.Responder {
 			return middleware.NotImplemented("operation health.Health has not yet been implemented")
 		}),
@@ -133,6 +136,8 @@ type ServerAPI struct {
 	AuthorCreateAuthorHandler author.CreateAuthorHandler
 	// BookCreateBookHandler sets the operation handler for the create book operation
 	BookCreateBookHandler book.CreateBookHandler
+	// AuthorFindOneAuthorHandler sets the operation handler for the find one author operation
+	AuthorFindOneAuthorHandler author.FindOneAuthorHandler
 	// HealthHealthHandler sets the operation handler for the health operation
 	HealthHealthHandler health.HealthHandler
 	// AuthenticationLoginHandler sets the operation handler for the login operation
@@ -236,6 +241,9 @@ func (o *ServerAPI) Validate() error {
 	}
 	if o.BookCreateBookHandler == nil {
 		unregistered = append(unregistered, "book.CreateBookHandler")
+	}
+	if o.AuthorFindOneAuthorHandler == nil {
+		unregistered = append(unregistered, "author.FindOneAuthorHandler")
 	}
 	if o.HealthHealthHandler == nil {
 		unregistered = append(unregistered, "health.HealthHandler")
@@ -367,6 +375,10 @@ func (o *ServerAPI) initHandlerCache() {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/v1/book"] = book.NewCreateBook(o.context, o.BookCreateBookHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/v1/author/{author_id}"] = author.NewFindOneAuthor(o.context, o.AuthorFindOneAuthorHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}

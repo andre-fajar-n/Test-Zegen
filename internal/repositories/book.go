@@ -3,7 +3,6 @@ package repositories
 import (
 	"context"
 	"net/http"
-	"time"
 	"zegen/gen/models"
 	"zegen/internal/utils"
 
@@ -47,7 +46,7 @@ func (r *repository) FindOneBookByFilter(ctx context.Context, filter []ColumnVal
 
 	err := db.Preload("Authors").First(&bookModel).Error
 	if err == gorm.ErrRecordNotFound {
-		return nil, r.rt.SetError(http.StatusNotFound, utils.ERR_AUTHOR_NOT_FOUND)
+		return nil, r.rt.SetError(http.StatusNotFound, utils.ERR_BOOK_NOT_FOUND)
 	}
 	if err != nil {
 		logger.Error().Err(err).Msg("error query")
@@ -75,17 +74,16 @@ func (r *repository) UpdateBook(ctx context.Context, tx *gorm.DB, data *models.B
 	return nil
 }
 
-func (r *repository) SoftDeleteBook(ctx context.Context, tx *gorm.DB, bookID uint64, deletedAt time.Time) error {
+func (r *repository) SoftDeleteBook(ctx context.Context, tx *gorm.DB, data *models.Book) error {
 	logger := r.rt.Logger.With().
-		Uint64("bookID", bookID).
-		Time("deletedAt", deletedAt).
+		Interface("data", data).
 		Logger()
 
 	if tx == nil {
 		tx = r.rt.Db
 	}
 
-	tx = tx.Model(&models.Book{}).Where("id", bookID).Update("deleted_at", deletedAt)
+	tx = tx.Select("deleted_at", "Authors").Session(&gorm.Session{FullSaveAssociations: true}).Updates(&data)
 	if err := tx.Error; err != nil {
 		logger.Error().Err(err).Msg("error query")
 		return err

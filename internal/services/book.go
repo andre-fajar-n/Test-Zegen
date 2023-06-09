@@ -166,17 +166,35 @@ func (s *service) SoftDeleteBook(ctx context.Context, form *book.SoftDeleteBookP
 			Value:  form.BookID,
 		},
 	}
-	_, err := s.repo.FindOneBookByFilter(ctx, filter, false)
+	currData, err := s.repo.FindOneBookByFilter(ctx, filter, false)
 	if err != nil {
 		logger.Error().Err(err).Msg("error repo.FindOneBookByFilter")
 		return err
 	}
 
 	now := time.Now().UTC()
+	nowStrfmt := strfmt.DateTime(now)
 
-	err = s.repo.SoftDeleteBook(ctx, nil, form.BookID, now)
+	currData.DeletedAt = &nowStrfmt
+	for i, v := range currData.Authors {
+		if v.DeletedAt == nil {
+			v.DeletedAt = &nowStrfmt
+		}
+
+		currData.Authors[i] = v
+	}
+
+	err = s.rt.Db.Transaction(func(tx *gorm.DB) error {
+		err = s.repo.SoftDeleteBook(ctx, tx, currData)
+		if err != nil {
+			logger.Error().Err(err).Msg("error repo.SoftDeleteBook")
+			return err
+		}
+
+		return nil
+	})
 	if err != nil {
-		logger.Error().Err(err).Msg("error repo.SoftDeleteBook")
+		logger.Error().Err(err).Msg("error transaction")
 		return err
 	}
 

@@ -28,7 +28,7 @@ type (
 		CreateBook(ctx context.Context, tx *gorm.DB, data *models.Book) (*models.Book, error)
 		FindOneBookByFilter(ctx context.Context, filter []ColumnValue, isDeleted bool) (*models.Book, error)
 		UpdateBook(ctx context.Context, tx *gorm.DB, data *models.Book) error
-		SoftDeleteBook(ctx context.Context, tx *gorm.DB, bookID uint64, deletedAt time.Time) error
+		SoftDeleteBook(ctx context.Context, tx *gorm.DB, data *models.Book) error
 	}
 
 	userRepository interface {

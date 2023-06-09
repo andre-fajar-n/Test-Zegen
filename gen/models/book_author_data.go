@@ -18,10 +18,10 @@ import (
 type BookAuthorData struct {
 
 	// author id
-	AuthorID string `json:"author_id,omitempty"`
+	AuthorID uint64 `json:"author_id,omitempty"`
 
 	// book id
-	BookID string `json:"book_id,omitempty"`
+	BookID uint64 `json:"book_id,omitempty"`
 }
 
 // Validate validates this book author data

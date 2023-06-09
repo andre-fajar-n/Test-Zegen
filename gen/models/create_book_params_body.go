@@ -21,7 +21,7 @@ type CreateBookParamsBody struct {
 
 	// author ids
 	// Required: true
-	AuthorIds []float64 `json:"author_ids"`
+	AuthorIds []uint64 `json:"author_ids"`
 
 	// isbn
 	// Required: true

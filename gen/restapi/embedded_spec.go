@@ -476,10 +476,12 @@ func init() {
       "type": "object",
       "properties": {
         "author_id": {
-          "type": "string"
+          "type": "number",
+          "format": "uint64"
         },
         "book_id": {
-          "type": "string"
+          "type": "number",
+          "format": "uint64"
         }
       }
     },
@@ -540,6 +542,7 @@ func init() {
           "type": "array",
           "items": {
             "type": "number",
+            "format": "uint64",
             "minItems": 1,
             "uniqueItems": true
           }
@@ -760,6 +763,7 @@ func init() {
           "type": "array",
           "items": {
             "type": "number",
+            "format": "uint64",
             "minItems": 1,
             "uniqueItems": true
           }
@@ -1260,10 +1264,12 @@ func init() {
       "type": "object",
       "properties": {
         "author_id": {
-          "type": "string"
+          "type": "number",
+          "format": "uint64"
         },
         "book_id": {
-          "type": "string"
+          "type": "number",
+          "format": "uint64"
         }
       }
     },
@@ -1323,7 +1329,8 @@ func init() {
         "author_ids": {
           "type": "array",
           "items": {
-            "type": "number"
+            "type": "number",
+            "format": "uint64"
           }
         },
         "isbn": {
@@ -1541,7 +1548,8 @@ func init() {
         "author_ids": {
           "type": "array",
           "items": {
-            "type": "number"
+            "type": "number",
+            "format": "uint64"
           }
         },
         "isbn": {

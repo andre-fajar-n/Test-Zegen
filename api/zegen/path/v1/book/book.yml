@@ -32,6 +32,7 @@ post:
               type: number
               minItems: 1
               uniqueItems: true
+              format: uint64
 
   responses:
     201:

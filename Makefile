@@ -21,10 +21,10 @@ doc: validate
 	swagger serve api/zegen/index.yml --no-open --host=0.0.0.0 --port=8080 --base-path=/
 
 clean:
-	# remove all files inside /gen/models except custom_fields_valuer_scanner.go
-	find ./gen/models -mindepth 1 -name custom_fields_valuer_scanner.go -prune -o -exec rm -rf {} +
+	# remove all files inside /gen/models except tabler_name.go
+	find ./gen/models -mindepth 1 -name tabler_name.go -prune -o -exec rm -rf {} +
+	find ./gen/restapi -mindepth 1 -name configure_server.go -prune -o -exec rm -rf {} +
 	rm -rf server
-	rm -rf ./gen/restapi
 	go clean -i .
 
 generate: validate

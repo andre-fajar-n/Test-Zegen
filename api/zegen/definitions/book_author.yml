@@ -9,6 +9,8 @@ definitions:
     type: object
     properties:
       book_id:
-        type: string
+        type: number
+        format: uint64
       author_id:
-        type: string
+        type: number
+        format: uint64

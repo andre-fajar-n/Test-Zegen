@@ -6,6 +6,7 @@ import (
 	"zegen/gen/restapi/operations"
 	"zegen/gen/restapi/operations/authentication"
 	"zegen/gen/restapi/operations/author"
+	"zegen/gen/restapi/operations/book"
 	"zegen/gen/restapi/operations/health"
 	"zegen/internal/services"
 	"zegen/internal/utils"
@@ -109,6 +110,56 @@ func Route(rt *runtime.Runtime, api *operations.ServerAPI, apiService services.I
 				})
 			}
 			return author.NewSoftDeleteAuthorOK().WithPayload(&models.Success{
+				Message: utils.SUCCESS_DELETE,
+			})
+		})
+	}
+
+	// book
+	{
+		api.BookCreateBookHandler = book.CreateBookHandlerFunc(func(cap book.CreateBookParams, p *models.Principal) middleware.Responder {
+			bookID, err := apiService.CreateBook(context.Background(), &cap)
+			if err != nil {
+				errRes := rt.GetError(err)
+				return book.NewCreateBookDefault(int(errRes.Code())).WithPayload(&models.Error{
+					Code:    int64(errRes.Code()),
+					Message: errRes.Error(),
+				})
+			}
+			return book.NewCreateBookCreated().WithPayload(&models.SuccessCreateBook{
+				Success: models.Success{
+					Message: utils.SUCCESS_CREATE,
+				},
+				SuccessCreateBookAllOf1: models.SuccessCreateBookAllOf1{
+					BookID: *bookID,
+				},
+			})
+		})
+
+		api.BookUpdateBookHandler = book.UpdateBookHandlerFunc(func(uap book.UpdateBookParams, p *models.Principal) middleware.Responder {
+			err := apiService.UpdateBook(context.Background(), &uap)
+			if err != nil {
+				errRes := rt.GetError(err)
+				return book.NewUpdateBookDefault(int(errRes.Code())).WithPayload(&models.Error{
+					Code:    int64(errRes.Code()),
+					Message: errRes.Error(),
+				})
+			}
+			return book.NewUpdateBookOK().WithPayload(&models.Success{
+				Message: utils.SUCCESS_UPDATE,
+			})
+		})
+
+		api.BookSoftDeleteBookHandler = book.SoftDeleteBookHandlerFunc(func(sdap book.SoftDeleteBookParams, p *models.Principal) middleware.Responder {
+			err := apiService.SoftDeleteBook(context.Background(), &sdap)
+			if err != nil {
+				errRes := rt.GetError(err)
+				return book.NewSoftDeleteBookDefault(int(errRes.Code())).WithPayload(&models.Error{
+					Code:    int64(errRes.Code()),
+					Message: errRes.Error(),
+				})
+			}
+			return book.NewSoftDeleteBookOK().WithPayload(&models.Success{
 				Message: utils.SUCCESS_DELETE,
 			})
 		})

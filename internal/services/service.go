@@ -4,6 +4,7 @@ import (
 	"context"
 	"zegen/gen/restapi/operations/authentication"
 	"zegen/gen/restapi/operations/author"
+	"zegen/gen/restapi/operations/book"
 	"zegen/internal/repositories"
 	"zegen/runtime"
 )
@@ -12,6 +13,7 @@ type (
 	IService interface {
 		userService
 		authorService
+		bookService
 	}
 
 	userService interface {
@@ -23,6 +25,12 @@ type (
 		CreateAuthor(ctx context.Context, form *author.CreateAuthorParams) (*uint64, error)
 		UpdateAuthor(ctx context.Context, form *author.UpdateAuthorParams) error
 		SoftDeleteAuthor(ctx context.Context, form *author.SoftDeleteAuthorParams) error
+	}
+
+	bookService interface {
+		CreateBook(ctx context.Context, form *book.CreateBookParams) (*uint64, error)
+		UpdateBook(ctx context.Context, form *book.UpdateBookParams) error
+		SoftDeleteBook(ctx context.Context, form *book.SoftDeleteBookParams) error
 	}
 
 	service struct {

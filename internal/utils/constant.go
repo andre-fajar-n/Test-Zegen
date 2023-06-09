@@ -2,7 +2,8 @@ package utils
 
 // error message
 const (
-	ERR_AUTHOR_NOT_FOUND = "author not found"
+	ERR_AUTHOR_NOT_FOUND      = "author not found"
+	ERR_THERE_IS_DATA_DELETED = "there is data deleted"
 )
 
 // success message
